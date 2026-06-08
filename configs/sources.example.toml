@@ -1,49 +1,54 @@
 default_query = ""
 
 [[sources]]
-name = "X Entertainment News Hit Posts"
-kind = "x_hit_media_search"
-query = "(from:modelpress OR from:oricon OR from:eiga_natalie OR from:thetvjp OR from:cinematoday) filter:images min_faves:100 -filter:replies"
-search_mode = "top"
-tags = ["x", "twitter", "japan", "entertainment", "sources", "hit-tweets", "photos"]
+name = "Modelpress Photo News"
+kind = "html"
+url = "https://mdpr.jp/news"
+link_patterns = ["/news/"]
+tags = ["modelpress", "japan", "entertainment", "photos"]
 priority = 50
-summary = "High-engagement photo tweets from Japanese entertainment news accounts."
+require_media = true
+summary = "Japanese entertainment photo articles from Modelpress."
 
 [[sources]]
-name = "X Fresh Entertainment Source Hits"
-kind = "x_hit_media_search"
-query = "(from:modelpress OR from:oricon OR from:eiga_natalie OR from:thetvjp OR from:cinematoday) filter:images min_faves:30 since:{since_2d} -filter:replies"
-search_mode = "live"
-tags = ["x", "twitter", "japan", "entertainment", "fresh", "sources", "hit-tweets", "photos"]
+name = "Modelpress Drama Photos"
+kind = "html"
+url = "https://mdpr.jp/drama"
+link_patterns = ["/drama/"]
+tags = ["modelpress", "japan", "drama", "photos"]
 priority = 48
-summary = "Recent source-based entertainment photo tweets already getting traction."
+require_media = true
+summary = "Japanese drama photo articles from Modelpress."
 
 [[sources]]
-name = "X JP Film Drama Photo Hits"
-kind = "x_hit_media_search"
-query = "(from:eiga_natalie OR from:cinematoday OR from:eigacom OR from:crank_in_net OR from:realsound_m) filter:images min_faves:50 -filter:replies"
-search_mode = "top"
-tags = ["x", "twitter", "japan", "film", "drama", "sources", "hit-tweets", "photos"]
+name = "Eiga Natalie Photos"
+kind = "html"
+url = "https://natalie.mu/eiga/news"
+link_patterns = ["/eiga/news/"]
+tags = ["natalie", "japan", "film", "drama", "photos"]
 priority = 46
-summary = "High-engagement photo tweets from Japanese film, drama, and TV sources."
+require_media = true
+summary = "Film and drama photo articles from Eiga Natalie."
 
 [[sources]]
-name = "X JP Celebrity Idol Image Hits"
-kind = "x_hit_media_search"
-query = "(from:modelpress OR from:oricon OR from:natalie_mu OR from:Billboard_JAPAN OR from:realsoundjp) filter:images min_faves:50 -filter:replies"
-search_mode = "top"
-tags = ["x", "twitter", "japan", "celebrities", "idols", "sources", "hit-tweets", "photos"]
+name = "Music Natalie Photos"
+kind = "html"
+url = "https://natalie.mu/music/news"
+link_patterns = ["/music/news/"]
+tags = ["natalie", "japan", "music", "idols", "photos"]
 priority = 44
-summary = "High-engagement celebrity, idol, and music entertainment photo posts from trusted sources."
+require_media = true
+summary = "Music and idol photo articles from Music Natalie."
 
 [[sources]]
-name = "X JP Anime Voice Actor Source Hits"
-kind = "x_hit_media_search"
-query = "(from:animeanime_jp OR from:animatetimes OR from:comic_natalie OR from:dengekionline OR from:famitsu) filter:images min_faves:50 -filter:replies"
-search_mode = "top"
-tags = ["x", "twitter", "japan", "anime", "voice-actors", "sources", "hit-tweets", "photos"]
+name = "Comic Natalie Photos"
+kind = "html"
+url = "https://natalie.mu/comic/news"
+link_patterns = ["/comic/news/"]
+tags = ["natalie", "japan", "anime", "manga", "photos"]
 priority = 42
-summary = "High-engagement anime, game, manga, and voice-actor photo posts from trusted sources."
+require_media = true
+summary = "Anime and manga photo articles from Comic Natalie."
 
 [[sources]]
 name = "Yahoo Realtime Entertainment Manual"

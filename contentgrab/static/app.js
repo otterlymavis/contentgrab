@@ -39,54 +39,44 @@ function escapeHtml(value) {
 }
 
 function renderLeads() {
-  els.leadCount.textContent = state.leads.length ? `${state.leads.length} links` : "No links yet";
+  const visibleLeads = state.leads
+    .map((lead, index) => ({ lead, index }))
+    .filter((item) => item.lead.media_urls.length);
+  els.leadCount.textContent = visibleLeads.length ? `${visibleLeads.length} photos` : "No photos yet";
   els.shortlistCount.textContent = `${state.shortlist.length} selected`;
-  els.leads.innerHTML = state.leads.map(renderLeadCard).join("");
+  document.querySelectorAll(".selection-action").forEach((element) => {
+    element.hidden = state.shortlist.length === 0;
+  });
+  els.leads.innerHTML = visibleLeads.map(({ lead, index }) => renderLeadCard(lead, index + 1)).join("");
 }
 
-function renderLeadCard(lead) {
-  const index = state.leads.indexOf(lead) + 1;
+function renderLeadCard(lead, index) {
   const selected = isSelected(lead);
-  const preview = renderPreview(lead);
   const media = lead.media_urls
-    .filter((url) => /\.(jpe?g|png|gif|webp)$/i.test(url))
+    .filter(isImageUrl)
     .slice(0, 5)
-    .map((url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer"><img src="${escapeHtml(url)}" alt=""></a>`)
+    .map((url) => `<img src="${escapeHtml(url)}" alt="">`)
     .join("");
   return `
     <article class="lead-card ${escapeHtml(lead.status)} ${selected ? "selected" : ""}">
-      <div class="lead-row">
-        <a class="lead-title" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
-        <div class="card-actions">
-          <button class="${selected ? "primary" : "secondary"}" type="button" data-toggle="${index}">
-            ${selected ? "✓" : "+"}
-          </button>
-          <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
-        </div>
-      </div>
-      ${preview}
-      ${media ? `<div class="media-strip">${media}</div>` : ""}
+      <input class="pick" type="checkbox" data-toggle="${index}" ${selected ? "checked" : ""} aria-label="${escapeHtml(lead.title)}">
+      <a class="content-tile" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(lead.title)}">
+        <div class="media-strip">${media}</div>
+      </a>
     </article>
   `;
 }
 
-function isSelected(lead) {
-  return state.shortlist.some((item) => item.url === lead.url);
+function isImageUrl(value) {
+  try {
+    return /\.(jpe?g|png|gif|webp)$/i.test(new URL(value).pathname);
+  } catch {
+    return /\.(jpe?g|png|gif|webp)(?:\?|$)/i.test(value);
+  }
 }
 
-function renderPreview(lead) {
-  if (lead.status === "media-search" || lead.status === "hit-search") {
-    return "";
-  }
-  if (!lead.preview_title && !lead.preview_description) {
-    return "";
-  }
-  const previewText = lead.preview_title || lead.title;
-  return `
-    <div class="preview-box">
-      <strong>${escapeHtml(previewText)}</strong>
-    </div>
-  `;
+function isSelected(lead) {
+  return state.shortlist.some((item) => item.url === lead.url);
 }
 
 async function collect(event) {

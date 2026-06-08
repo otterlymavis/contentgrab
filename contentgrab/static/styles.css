@@ -117,7 +117,8 @@ p {
 
 .lead-card {
   display: grid;
-  gap: 6px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
   padding: 10px 0;
   border-top: 1px solid var(--line);
   background: transparent;
@@ -133,27 +134,11 @@ p {
   border-left: 2px solid var(--ink);
 }
 
-.lead-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px;
-  align-items: start;
-}
-
-.lead-title {
-  overflow-wrap: anywhere;
-}
-
-.lead-title {
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 760;
-  line-height: 1.35;
-  text-decoration: none;
-}
-
-.lead-title:hover {
-  text-decoration: underline;
+.pick {
+  width: 18px;
+  height: 18px;
+  margin: 4px 0 0;
+  accent-color: var(--accent);
 }
 
 .preview-box {
@@ -172,7 +157,7 @@ p {
 
 .media-strip {
   display: grid;
-  grid-template-columns: repeat(5, minmax(58px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -183,24 +168,21 @@ p {
 
 .media-strip img {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 6px;
 }
 
-.card-actions,
+.content-tile {
+  display: block;
+  min-width: 0;
+  text-decoration: none;
+}
+
 .review-bar {
   display: flex;
   flex-wrap: nowrap;
   gap: 6px;
-}
-
-.card-actions .primary,
-.card-actions .secondary,
-.card-actions a {
-  min-width: 42px;
-  min-height: 30px;
-  padding: 5px 8px;
 }
 
 @media (max-width: 860px) {
@@ -237,7 +219,7 @@ p {
     display: grid;
   }
 
-  .lead-row {
-    grid-template-columns: 1fr;
+  .lead-card {
+    grid-template-columns: auto minmax(0, 1fr);
   }
 }

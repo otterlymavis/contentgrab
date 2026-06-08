@@ -17,16 +17,22 @@ class LinkParser(HTMLParser):
         self._active_href: str | None = None
         self._active_text: list[str] = []
         self.links: list[tuple[str, str]] = []
+        self.link_media_urls: dict[str, list[str]] = {}
         self.media_urls: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr_map = dict(attrs)
         if tag in {"img", "source"}:
-            src = attr_map.get("src") or attr_map.get("data-src")
+            src = attr_map.get("src") or attr_map.get("data-src") or attr_map.get("data-original")
+            if not src and attr_map.get("srcset"):
+                src = attr_map["srcset"].split(",")[0].strip().split(" ")[0]
             if src:
                 media_url = urljoin(self.base_url, src)
                 if _is_media_url(media_url):
-                    self.media_urls.append(media_url)
+                    if self._active_href:
+                        self.link_media_urls.setdefault(self._active_href, []).append(media_url)
+                    else:
+                        self.media_urls.append(media_url)
             return
 
         if tag != "a":
@@ -94,7 +100,9 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
         seen.add(url)
         display_title = title or urlparse(url).path.strip("/") or url
         linked_media_urls = tuple(link for _, link in parser.links if _is_media_url(link))
+        article_media_urls = tuple(parser.link_media_urls.get(url, ()))
         media_urls = tuple(dict.fromkeys(page_media_urls + linked_media_urls))
+        media_urls = tuple(dict.fromkeys(article_media_urls + media_urls))
         if source.require_media and not media_urls:
             continue
         leads.append(

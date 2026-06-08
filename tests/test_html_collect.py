@@ -18,3 +18,13 @@ class LinkParserTests(unittest.TestCase):
             parser.media_urls,
             ["https://example.jp/media/still.webp"],
         )
+
+    def test_link_parser_associates_images_inside_links(self) -> None:
+        parser = LinkParser("https://example.jp/board/")
+        parser.feed('<a href="/topics/123"><img data-src="/media/still.webp">Story</a>')
+
+        self.assertEqual(parser.links, [("Story", "https://example.jp/topics/123")])
+        self.assertEqual(
+            parser.link_media_urls,
+            {"https://example.jp/topics/123": ["https://example.jp/media/still.webp"]},
+        )

@@ -39,23 +39,6 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;");
 }
 
-function renderSources(sources) {
-  if (!els.sources) {
-    return;
-  }
-  els.sources.innerHTML = sources
-    .map((source) => {
-      const enabled = source.enabled ? "enabled" : "paused";
-      return `
-        <div class="source-item">
-          <strong>${escapeHtml(source.name)}</strong>
-          <p>${escapeHtml(source.kind)} - ${enabled} - priority ${source.priority}</p>
-        </div>
-      `;
-    })
-    .join("");
-}
-
 function renderLeads() {
   els.leadCount.textContent = `${state.leads.length} links - ${state.shortlist.length} selected`;
   els.leads.innerHTML = state.leads.map(renderLeadCard).join("");
@@ -84,10 +67,6 @@ function renderLeadCard(lead) {
       </div>
     </article>
   `;
-}
-
-function hasPreview(lead) {
-  return Boolean(lead.preview_title || lead.preview_description || lead.media_urls.length || lead.status === "media-search");
 }
 
 function isSelected(lead) {
@@ -199,8 +178,6 @@ async function clearShortlist() {
 }
 
 async function init() {
-  const config = await requestJson("/api/config");
-  renderSources(config.sources);
   const current = await requestJson("/api/state");
   state.leads = current.leads;
   state.shortlist = current.shortlist;

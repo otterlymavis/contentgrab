@@ -29,10 +29,10 @@ input {
 .app-shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 24px;
+  gap: 22px;
   width: min(1120px, 100%);
   margin: 0 auto;
-  padding: 28px;
+  padding: 24px;
 }
 
 .topbar {
@@ -116,7 +116,7 @@ p {
 .shortlist-panel {
   display: grid;
   align-content: start;
-  gap: 16px;
+  gap: 14px;
 }
 
 .section-head {
@@ -135,14 +135,14 @@ p {
 .lead-grid,
 .shortlist {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .lead-card,
 .shortlist-card {
   display: grid;
-  gap: 10px;
-  padding: 14px 0;
+  gap: 8px;
+  padding: 12px 0;
   border-top: 1px solid var(--line);
   background: transparent;
 }
@@ -154,7 +154,7 @@ p {
 }
 
 .lead-card.selected {
-  padding-left: 12px;
+  padding-left: 10px;
   border-left: 3px solid var(--ink);
 }
 
@@ -186,9 +186,9 @@ p {
 
 .preview-box {
   display: grid;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--accent-soft);
 }
 
@@ -220,22 +220,27 @@ p {
 .shortlist-actions,
 .shortlist-card-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+}
+
+.card-actions .primary,
+.card-actions .secondary {
+  flex: 1;
 }
 
 .shortlist-panel {
   position: sticky;
   top: 24px;
   align-self: start;
-  padding: 16px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
 }
 
 .shortlist-card {
-  padding: 12px 0;
+  padding: 10px 0;
 }
 
 @media (max-width: 860px) {
@@ -249,7 +254,8 @@ p {
     display: grid;
   }
 
-  .primary {
+  .collect-bar,
+  .collect-bar .primary {
     width: 100%;
   }
 

@@ -22,6 +22,8 @@ def load_config(path: str | Path) -> tuple[str, list[Source]]:
                 tags=tuple(raw.get("tags", [])),
                 enabled=bool(raw.get("enabled", True)),
                 priority=int(raw.get("priority", 0)),
+                require_media=bool(raw.get("require_media", False)),
+                summary=str(raw.get("summary", "")),
             )
         )
 

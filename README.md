@@ -1,6 +1,6 @@
 # contentgrab
 
-`contentgrab` is a small local CLI for collecting daily content leads from Japanese culture and entertainment sources. It is designed for creators who want links, context, and light metadata first, then choose what is worth turning into a post.
+`contentgrab` is a small local app and CLI for collecting trending Japanese social media leads that point toward posts with images or video. It is designed for creators who want links, context, and light metadata first, then choose what is worth turning into a post.
 
 The tool does not download images or videos. It collects links to posts, pages, and obvious media URLs so you can review sources yourself and stay mindful of platform rules and copyright.
 
@@ -8,7 +8,8 @@ The tool does not download images or videos. It collects links to posts, pages, 
 
 - Reads source definitions from a TOML config.
 - Collects links from HTML pages such as forums, rankings, and news pages.
-- Adds search URLs for sources that are not safe or practical to scrape directly, such as X/Twitter.
+- Collects Japan X/Twitter trend terms and turns them into media-filtered X searches.
+- Adds manual trend URLs for sources that are not safe or practical to scrape directly.
 - Scores leads with Japanese entertainment keywords.
 - Exports Markdown for daily review and JSON for automation.
 
@@ -17,17 +18,17 @@ The tool does not download images or videos. It collects links to posts, pages, 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
-.\.venv\Scripts\python.exe -m contentgrab collect --config configs\sources.example.toml --query "映画 ドラマ 芸能" --limit 25 --markdown leads.md --json leads.json
+.\.venv\Scripts\python.exe -m contentgrab collect --config configs\sources.example.toml --limit 25 --markdown leads.md --json leads.json
 ```
 
 Open `leads.md` after the run and pick the links you want to investigate.
 
 ## Daily workflow
 
-Collect leads:
+Collect trending media leads:
 
 ```powershell
-.\.venv\Scripts\python.exe -m contentgrab collect --config configs\sources.example.toml --query "映画 ドラマ 芸能 アイドル" --limit 15 --min-score 3
+.\.venv\Scripts\python.exe -m contentgrab collect --config configs\sources.example.toml --limit 15 --min-score 1
 ```
 
 Create a shortlist by lead number:
@@ -75,9 +76,12 @@ HTML sources support:
 - `link_patterns`: optional substrings that candidate URLs must contain.
 - `tags`: labels added to each lead.
 - `priority`: source score boost for your favorite sources.
+- `require_media`: skip fetched leads when no media URL is detected.
 
-Search URL sources support:
+Trend and manual sources support:
 
+- `kind = "x_trends_media"`: fetches Japan trend terms and creates X media-search leads.
+- `kind = "manual_url"`: creates a manual review link for blocked or personalized trend surfaces.
 - `url_template`: template containing `{query}`.
 - `tags`: labels added to the generated lead.
 - `priority`: source score boost for your favorite sources.

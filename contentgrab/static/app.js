@@ -7,7 +7,6 @@ const state = {
 const els = {
   collectForm: document.querySelector("#collect-form"),
   shortlistForm: document.querySelector("#shortlist-form"),
-  query: document.querySelector("#query"),
   limit: document.querySelector("#limit"),
   minScore: document.querySelector("#min-score"),
   selectMinScore: document.querySelector("#select-min-score"),
@@ -62,7 +61,7 @@ function renderSources(sources) {
 
 function renderLeads() {
   const leads = state.leads.filter((lead) => state.filter === "all" || lead.status === state.filter);
-  els.leadCount.textContent = `${state.leads.length} leads · ${leads.length} shown`;
+  els.leadCount.textContent = `${state.leads.length} trending leads · ${leads.length} shown`;
   els.leads.innerHTML = leads.map(renderLeadCard).join("");
 }
 
@@ -70,6 +69,7 @@ function renderLeadCard(lead) {
   const index = state.leads.indexOf(lead) + 1;
   const tags = lead.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   const badgeClass = lead.status === "error" ? "badge error" : "badge";
+  const actionText = lead.status === "media-search" ? "Open media search" : "Open";
   const media = lead.media_urls
     .filter((url) => /\.(jpe?g|png|gif|webp)$/i.test(url))
     .slice(0, 5)
@@ -89,7 +89,7 @@ function renderLeadCard(lead) {
       ${media ? `<div class="media-strip">${media}</div>` : ""}
       <div class="card-actions">
         <button class="secondary" type="button" data-add="${index}">Shortlist</button>
-        <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
+        <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${actionText}</a>
       </div>
     </article>
   `;
@@ -112,13 +112,12 @@ function renderShortlist() {
 
 async function collect(event) {
   event.preventDefault();
-  setStatus("Collecting leads...");
+  setStatus("Collecting current trends and media leads...");
   els.collectForm.querySelector("button").disabled = true;
   try {
     const payload = await requestJson("/api/collect", {
       method: "POST",
       body: JSON.stringify({
-        query: els.query.value,
         limit: els.limit.value,
         min_score: els.minScore.value,
       }),
@@ -127,7 +126,7 @@ async function collect(event) {
     state.shortlist = payload.shortlist;
     renderLeads();
     renderShortlist();
-    setStatus("Collection complete.");
+    setStatus("Trending media collection complete.");
   } catch (error) {
     setStatus(error.message);
   } finally {
@@ -174,7 +173,6 @@ async function removeLead(url) {
 
 async function init() {
   const config = await requestJson("/api/config");
-  els.query.value = config.default_query || els.query.value;
   renderSources(config.sources);
   const current = await requestJson("/api/state");
   state.leads = current.leads;

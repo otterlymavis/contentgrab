@@ -15,7 +15,7 @@ def main(argv: list[str] | None = None) -> int:
 
     collect_parser = subparsers.add_parser("collect", help="Collect content leads")
     collect_parser.add_argument("--config", required=True, help="Path to sources TOML")
-    collect_parser.add_argument("--query", help="Search query for search URL sources")
+    collect_parser.add_argument("--query", help="Optional query for legacy search URL sources")
     collect_parser.add_argument("--limit", type=int, default=20, help="Maximum leads per source")
     collect_parser.add_argument("--min-score", type=int, help="Only export leads at or above this score")
     collect_parser.add_argument("--markdown", default="leads.md", help="Markdown output path")
@@ -34,9 +34,6 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "collect":
         default_query, sources = load_config(args.config)
         query = (args.query or default_query).strip()
-        if not query:
-            parser.error("Provide --query or default_query in the config")
-
         leads = collect_sources(sources, query=query, limit_per_source=args.limit)
         if args.min_score is not None:
             leads = [lead for lead in leads if lead.score >= args.min_score or lead.status != "ok"]

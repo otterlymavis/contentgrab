@@ -1,15 +1,17 @@
-default_query = "映画 OR ドラマ OR 芸能 OR アニメ OR Netflix OR 配信"
+default_query = ""
 
 [[sources]]
-name = "X Search"
-kind = "search_url"
-url_template = "https://twitter.com/search?q={query}&src=typed_query&f=top"
-tags = ["x", "twitter", "search"]
-priority = 3
+name = "Japan X Trends Media"
+kind = "x_trends_media"
+url = "https://trends24.in/japan/"
+tags = ["x", "twitter", "japan", "trending"]
+priority = 30
+summary = "Current Japan X trend. Opens X search filtered to posts containing media."
 
 [[sources]]
-name = "Yahoo Realtime Search"
-kind = "search_url"
-url_template = "https://search.yahoo.co.jp/realtime/search?p={query}"
-tags = ["yahoo", "realtime", "search"]
-priority = 2
+name = "X Explore Trends"
+kind = "manual_url"
+url = "https://twitter.com/explore/tabs/trending"
+tags = ["x", "twitter", "manual", "trending"]
+priority = 5
+summary = "Open X Explore if the trend seed page misses local personalized trends."

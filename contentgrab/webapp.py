@@ -8,7 +8,7 @@ from dataclasses import asdict
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 from .collectors import collect_sources
 from .config import load_config
@@ -80,11 +80,8 @@ class ContentGrabHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/api/collect":
             payload = self._read_json_body()
-            query, sources = load_config(DEFAULT_CONFIG)
-            requested_query = str(payload.get("query") or query).strip()
-            if not requested_query:
-                self._send_json({"error": "Provide a query before collecting."}, HTTPStatus.BAD_REQUEST)
-                return
+            default_query, sources = load_config(DEFAULT_CONFIG)
+            requested_query = str(payload.get("query") or default_query).strip()
             limit = _positive_int(payload.get("limit"), default=15)
             min_score = _optional_int(payload.get("min_score"))
             leads = collect_sources(sources, query=requested_query, limit_per_source=limit)

@@ -19,10 +19,11 @@ class ReviewTests(unittest.TestCase):
     def test_select_leads_filters_tags_scores_and_errors(self) -> None:
         leads = [
             Lead(title="x", url="https://example.com/x", source="test", score=8, tags=("x",)),
+            Lead(title="manual", url="https://example.com/manual", source="test", score=8, tags=("x",), status="manual"),
             Lead(title="low", url="https://example.com/low", source="test", score=1, tags=("x",)),
             Lead(title="error", url="https://example.com/error", source="test", score=9, tags=("x",), status="error"),
         ]
 
         selected = select_leads(leads, tags=("x",), min_score=5)
 
-        self.assertEqual([lead.title for lead in selected], ["x"])
+        self.assertEqual([lead.title for lead in selected], ["x", "manual"])

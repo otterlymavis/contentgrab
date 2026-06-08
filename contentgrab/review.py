@@ -14,7 +14,7 @@ def select_leads(
     selected: list[Lead] = []
 
     for position, lead in enumerate(leads, start=1):
-        if not include_errors and lead.status != "ok":
+        if not include_errors and lead.status == "error":
             continue
         if selected_indexes and position not in selected_indexes:
             continue

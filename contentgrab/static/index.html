@@ -13,26 +13,26 @@
           <div class="mark">CG</div>
           <div>
             <h1>contentgrab</h1>
-            <p>Daily leads for Japanese culture posts</p>
+            <p>Trending Japanese social media with media</p>
           </div>
         </div>
 
         <form id="collect-form" class="form-stack">
-          <label>
-            Query
-            <textarea id="query" rows="3" spellcheck="false">映画 ドラマ 芸能 アイドル</textarea>
-          </label>
+          <div class="mode-card">
+            <strong>Trend-first mode</strong>
+            <p>Collects current Japan X trend terms and opens media-filtered social searches. No keyword prompt.</p>
+          </div>
           <div class="inline-fields">
             <label>
-              Per source
+              Trends
               <input id="limit" type="number" min="1" max="50" value="12">
             </label>
             <label>
               Min score
-              <input id="min-score" type="number" min="0" value="3">
+              <input id="min-score" type="number" min="0" value="1">
             </label>
           </div>
-          <button class="primary" type="submit">Collect leads</button>
+          <button class="primary" type="submit">Collect trending media</button>
         </form>
 
         <div class="source-box">
@@ -49,7 +49,8 @@
           </div>
           <div class="filters">
             <button class="chip is-active" type="button" data-filter="all">All</button>
-            <button class="chip" type="button" data-filter="ok">Usable</button>
+            <button class="chip" type="button" data-filter="media-search">X media</button>
+            <button class="chip" type="button" data-filter="ok">Fetched media</button>
             <button class="chip" type="button" data-filter="error">Source notes</button>
           </div>
         </div>

@@ -14,6 +14,8 @@ class Source:
     tags: tuple[str, ...] = ()
     enabled: bool = True
     priority: int = 0
+    require_media: bool = False
+    summary: str = ""
 
 
 @dataclass(frozen=True)

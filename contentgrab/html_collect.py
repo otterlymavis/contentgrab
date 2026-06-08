@@ -95,14 +95,17 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
         display_title = title or urlparse(url).path.strip("/") or url
         linked_media_urls = tuple(link for _, link in parser.links if _is_media_url(link))
         media_urls = tuple(dict.fromkeys(page_media_urls + linked_media_urls))
+        if source.require_media and not media_urls:
+            continue
         leads.append(
             Lead(
                 title=display_title[:180],
                 url=url,
                 source=source.name,
-                score=score_text(display_title + " " + url) + source.priority,
+                score=score_text(display_title + " " + url) + source.priority + min(len(media_urls), 5) * 3,
                 tags=source.tags,
                 media_urls=media_urls[:5],
+                summary=source.summary,
             )
         )
 

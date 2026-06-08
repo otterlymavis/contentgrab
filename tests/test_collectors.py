@@ -1,6 +1,13 @@
 import unittest
 
-from contentgrab.collectors import _status_rank, _twitter_search_term, _x_media_search_url, collect_sources
+from contentgrab.collectors import (
+    _status_rank,
+    _twitter_search_term,
+    _x_media_search_url,
+    _youtube_video_id,
+    _merge_tags,
+    collect_sources,
+)
 from contentgrab.models import Source
 
 
@@ -68,3 +75,10 @@ class CollectorTests(unittest.TestCase):
 
     def test_media_search_status_ranks_first(self) -> None:
         self.assertGreater(_status_rank("media-search"), _status_rank("ok"))
+
+    def test_youtube_video_id_parses_watch_and_short_urls(self) -> None:
+        self.assertEqual(_youtube_video_id("https://www.youtube.com/watch?v=abc123"), "abc123")
+        self.assertEqual(_youtube_video_id("https://youtu.be/xyz789"), "xyz789")
+
+    def test_merge_tags_deduplicates_in_order(self) -> None:
+        self.assertEqual(_merge_tags(("youtube", "video"), ("video", "preview")), ("youtube", "video", "preview"))

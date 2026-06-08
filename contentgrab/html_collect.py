@@ -106,6 +106,8 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
                 tags=source.tags,
                 media_urls=media_urls[:5],
                 summary=source.summary,
+                preview_title=display_title[:180],
+                preview_description="Fetched source with media detected.",
             )
         )
 

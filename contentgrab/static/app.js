@@ -52,7 +52,7 @@ function renderSources(sources) {
       return `
         <div class="source-item">
           <strong>${escapeHtml(source.name)}</strong>
-          <p>${escapeHtml(source.kind)} · ${enabled} · priority ${source.priority}</p>
+          <p>${escapeHtml(source.kind)} - ${enabled} - priority ${source.priority}</p>
         </div>
       `;
     })
@@ -61,7 +61,7 @@ function renderSources(sources) {
 
 function renderLeads() {
   const leads = state.leads.filter((lead) => state.filter === "all" || lead.status === state.filter);
-  els.leadCount.textContent = `${state.leads.length} trending leads · ${leads.length} shown`;
+  els.leadCount.textContent = `${state.leads.length} trending leads - ${leads.length} shown`;
   els.leads.innerHTML = leads.map(renderLeadCard).join("");
 }
 
@@ -70,6 +70,7 @@ function renderLeadCard(lead) {
   const tags = lead.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   const badgeClass = lead.status === "error" ? "badge error" : "badge";
   const actionText = lead.status === "media-search" ? "Open media search" : "Open";
+  const preview = renderPreview(lead);
   const media = lead.media_urls
     .filter((url) => /\.(jpe?g|png|gif|webp)$/i.test(url))
     .slice(0, 5)
@@ -85,6 +86,7 @@ function renderLeadCard(lead) {
       </div>
       <a class="lead-title" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
       ${lead.summary ? `<p class="note">${escapeHtml(lead.summary)}</p>` : ""}
+      ${preview}
       <div class="tag-row">${tags}</div>
       ${media ? `<div class="media-strip">${media}</div>` : ""}
       <div class="card-actions">
@@ -95,6 +97,21 @@ function renderLeadCard(lead) {
   `;
 }
 
+function renderPreview(lead) {
+  if (!lead.preview_title && !lead.preview_description && lead.status !== "media-search") {
+    return "";
+  }
+  const eyebrow =
+    lead.status === "media-search" ? "Trend media search" : lead.media_urls.length ? "Preview available" : "Source preview";
+  return `
+    <div class="preview-box">
+      <span>${eyebrow}</span>
+      ${lead.preview_title ? `<strong>${escapeHtml(lead.preview_title)}</strong>` : ""}
+      ${lead.preview_description ? `<p>${escapeHtml(lead.preview_description)}</p>` : ""}
+    </div>
+  `;
+}
+
 function renderShortlist() {
   els.shortlistCount.textContent = `${state.shortlist.length} saved`;
   els.shortlist.innerHTML = state.shortlist
@@ -102,7 +119,7 @@ function renderShortlist() {
       (lead) => `
         <article class="shortlist-card">
           <a href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
-          <p>${escapeHtml(lead.source)} · score ${lead.score}</p>
+          <p>${escapeHtml(lead.source)} - score ${lead.score}</p>
           <button class="secondary" type="button" data-remove="${escapeHtml(lead.url)}">Remove</button>
         </article>
       `

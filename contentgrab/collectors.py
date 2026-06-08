@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from urllib.parse import parse_qs, quote_plus, urlencode, urlparse
 
 from .html_collect import LinkParser, collect_html_source, fetch_html
@@ -21,6 +22,8 @@ def collect_sources(sources: list[Source], query: str = "", limit_per_source: in
             leads.append(_manual_url_lead(source))
         elif source.kind == "x_trends_media":
             leads.extend(_x_trends_media_leads(source, limit_per_source))
+        elif source.kind == "youtube_trends":
+            leads.extend(_youtube_trends_leads(source, limit_per_source))
         else:
             raise ValueError(f"Unsupported source kind: {source.kind}")
 
@@ -92,9 +95,11 @@ def _x_trends_media_leads(source: Source, limit: int) -> list[Lead]:
                 url=_x_media_search_url(term),
                 source=source.name,
                 score=source.priority + rank_score,
-                tags=source.tags + ("trend", "media-search"),
+                tags=_merge_tags(source.tags, ("trend", "media-search")),
                 summary=source.summary
                 or "Current Japan X trend. Opens X search filtered to posts that contain media.",
+                preview_title=term,
+                preview_description="X media search for a currently trending Japan term.",
                 status="media-search",
             )
         )
@@ -112,6 +117,90 @@ def _twitter_search_term(title: str, url: str) -> str:
 def _x_media_search_url(term: str) -> str:
     query = urlencode({"q": f"{term} filter:media", "src": "typed_query", "f": "live"})
     return f"https://twitter.com/search?{query}"
+
+
+def _youtube_trends_leads(source: Source, limit: int) -> list[Lead]:
+    if not source.url:
+        raise ValueError(f"{source.name} is missing url")
+    try:
+        parser = LinkParser(source.url)
+        html = fetch_html(source.url)
+        parser.feed(html)
+    except Exception as exc:
+        return [
+            Lead(
+                title=f"{source.name} fetch failed",
+                url=source.url,
+                source=source.name,
+                score=source.priority,
+                tags=source.tags,
+                summary=f"{type(exc).__name__}: {exc}",
+                status="error",
+            )
+        ]
+
+    candidates = parser.links + [
+        (match.group(0), match.group(0))
+        for match in re.finditer(r"https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)[\w-]+", html)
+    ]
+    leads: list[Lead] = []
+    seen_ids: set[str] = set()
+    for title, url in candidates:
+        if len(leads) >= limit:
+            break
+        video_id = _youtube_video_id(url)
+        if not video_id or video_id in seen_ids:
+            continue
+        seen_ids.add(video_id)
+        clean_title = (title or f"YouTube video {video_id}").strip()
+        watch_url = f"https://www.youtube.com/watch?v={video_id}"
+        thumbnail_url = f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+        rank_score = max(limit - len(leads), 0)
+        leads.append(
+            Lead(
+                title=f"YouTube trending: {clean_title[:140]}",
+                url=watch_url,
+                source=source.name,
+                score=source.priority + rank_score + 5,
+                tags=_merge_tags(source.tags, ("video", "preview")),
+                summary=source.summary or "Trending YouTube video with thumbnail preview.",
+                media_urls=(thumbnail_url,),
+                preview_title=clean_title[:180],
+                preview_description="Trending YouTube video thumbnail preview.",
+                status="ok",
+            )
+        )
+    if leads:
+        return leads
+    return [
+        Lead(
+            title=f"{source.name} found no video links",
+            url=source.url,
+            source=source.name,
+            score=source.priority,
+            tags=source.tags,
+            summary="The source loaded but no YouTube video links were detected.",
+            status="error",
+        )
+    ]
+
+
+def _youtube_video_id(url: str) -> str:
+    parsed = urlparse(url)
+    if parsed.netloc.endswith("youtube.com") and parsed.path == "/watch":
+        return parse_qs(parsed.query).get("v", [""])[0]
+    if parsed.netloc.endswith("youtu.be"):
+        return parsed.path.strip("/").split("/")[0]
+    return ""
+
+
+def _merge_tags(*groups: tuple[str, ...]) -> tuple[str, ...]:
+    merged: list[str] = []
+    for group in groups:
+        for tag in group:
+            if tag not in merged:
+                merged.append(tag)
+    return tuple(merged)
 
 
 def _status_rank(status: str) -> int:

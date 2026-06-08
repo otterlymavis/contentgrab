@@ -7,11 +7,21 @@ from contentgrab.webapp import _dedupe_leads, _optional_int, _positive_int, _sta
 class WebAppTests(unittest.TestCase):
     def test_leads_to_payload_keeps_tuple_fields_json_ready(self) -> None:
         payload = leads_to_payload(
-            [Lead(title="lead", url="https://example.com", source="test", score=5, tags=("x",))]
+            [
+                Lead(
+                    title="lead",
+                    url="https://example.com",
+                    source="test",
+                    score=5,
+                    tags=("x",),
+                    preview_title="preview",
+                )
+            ]
         )
 
         self.assertEqual(payload[0]["tags"], ("x",))
         self.assertEqual(payload[0]["score"], 5)
+        self.assertEqual(payload[0]["preview_title"], "preview")
 
     def test_dedupe_leads_by_url(self) -> None:
         lead = Lead(title="lead", url="https://example.com", source="test", score=5)

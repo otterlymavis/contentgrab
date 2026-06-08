@@ -59,10 +59,10 @@ The app lets you collect leads, filter usable results versus source notes, add i
 
 The example config includes:
 
-- Girls Channel ranking pages.
-- 5ch board pages.
-- X/Twitter search links.
-- Yahoo realtime search links.
+- Japan X/Twitter trends converted into media-filtered X searches.
+- Japan YouTube trending videos with thumbnail previews when detected.
+- Girls Channel ranking pages with media links when detected.
+- Manual cross-check links for X Explore, Yahoo realtime, Google Trends Japan, and TikTok Creative Center Japan.
 
 Some platforms change markup often, require login, or prohibit automated scraping. For those, `contentgrab` can generate useful search links instead of pretending it can reliably fetch everything.
 
@@ -81,6 +81,7 @@ HTML sources support:
 Trend and manual sources support:
 
 - `kind = "x_trends_media"`: fetches Japan trend terms and creates X media-search leads.
+- `kind = "youtube_trends"`: fetches Japan YouTube trend links and creates thumbnail preview leads.
 - `kind = "manual_url"`: creates a manual review link for blocked or personalized trend surfaces.
 - `url_template`: template containing `{query}`.
 - `tags`: labels added to the generated lead.

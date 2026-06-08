@@ -23,6 +23,8 @@ def read_json(path: str | Path) -> list[Lead]:
             tags=tuple(item.get("tags", [])),
             summary=str(item.get("summary", "")),
             media_urls=tuple(item.get("media_urls", [])),
+            preview_title=str(item.get("preview_title", "")),
+            preview_description=str(item.get("preview_description", "")),
             status=str(item.get("status", "ok")),
             collected_at=str(item.get("collected_at", "")),
         )
@@ -47,6 +49,10 @@ def write_markdown(leads: list[Lead], path: str | Path) -> None:
         )
         if lead.summary:
             lines.append(f"- Note: {lead.summary}")
+        if lead.preview_title:
+            lines.append(f"- Preview: {lead.preview_title}")
+        if lead.preview_description:
+            lines.append(f"- Preview detail: {lead.preview_description}")
         if lead.media_urls:
             lines.append("- Media links:")
             lines.extend(f"  - {media_url}" for media_url in lead.media_urls)

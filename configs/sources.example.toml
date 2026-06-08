@@ -9,6 +9,14 @@ priority = 30
 summary = "Current Japan X trend. Opens X search filtered to posts containing media."
 
 [[sources]]
+name = "Japan YouTube Trending"
+kind = "youtube_trends"
+url = "https://youtube.trends24.in/japan"
+tags = ["youtube", "video", "japan", "trending"]
+priority = 28
+summary = "Trending Japan YouTube video with thumbnail preview when available."
+
+[[sources]]
 name = "Girls Channel Ranking Media"
 kind = "html"
 url = "https://girlschannel.net/rank/"
@@ -42,3 +50,19 @@ url = "https://search.yahoo.co.jp/realtime"
 tags = ["yahoo", "realtime", "manual", "trending"]
 priority = 4
 summary = "Manual realtime trend page for cross-checking posts outside X."
+
+[[sources]]
+name = "Google Trends Japan"
+kind = "manual_url"
+url = "https://trends.google.com/trending?geo=JP"
+tags = ["google", "manual", "japan", "trending"]
+priority = 4
+summary = "Manual Japan trend surface for cross-checking broader search interest."
+
+[[sources]]
+name = "TikTok Creative Center Japan"
+kind = "manual_url"
+url = "https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en?countryCode=JP"
+tags = ["tiktok", "manual", "japan", "trending"]
+priority = 4
+summary = "Manual TikTok trend surface; open to review current popular Japan hashtags and media."

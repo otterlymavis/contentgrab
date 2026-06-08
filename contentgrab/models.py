@@ -27,5 +27,7 @@ class Lead:
     tags: tuple[str, ...] = ()
     summary: str = ""
     media_urls: tuple[str, ...] = ()
+    preview_title: str = ""
+    preview_description: str = ""
     status: str = "ok"
     collected_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())

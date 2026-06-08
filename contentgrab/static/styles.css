@@ -115,6 +115,16 @@ p {
   gap: 0;
 }
 
+.search-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.search-button {
+  min-height: 32px;
+}
+
 .lead-card {
   display: grid;
   gap: 8px;

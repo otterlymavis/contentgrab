@@ -1,5 +1,6 @@
 const state = {
   leads: [],
+  searchButtons: [],
   shortlist: [],
 };
 
@@ -8,6 +9,7 @@ const els = {
   limit: document.querySelector("#limit"),
   minScore: document.querySelector("#min-score"),
   clearShortlist: document.querySelector("#clear-shortlist"),
+  searches: document.querySelector("#searches"),
   leads: document.querySelector("#leads"),
   leadCount: document.querySelector("#lead-count"),
   shortlistCount: document.querySelector("#shortlist-count"),
@@ -48,7 +50,50 @@ function renderLeads() {
   document.querySelectorAll(".selection-action").forEach((element) => {
     element.hidden = state.shortlist.length === 0;
   });
+  renderSearchButtons();
   els.leads.innerHTML = visibleLeads.map(({ lead, index }) => renderLeadCard(lead, index + 1)).join("");
+}
+
+function renderSearchButtons() {
+  const searchLeads = dedupeByUrl([...state.searchButtons, ...state.leads.filter(isSearchLead)]);
+  els.searches.innerHTML = searchLeads
+    .map(
+      (lead) => `
+        <a class="secondary search-button" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">
+          ${escapeHtml(searchLabel(lead))}
+        </a>
+      `
+    )
+    .join("");
+}
+
+function dedupeByUrl(leads) {
+  const seen = new Set();
+  return leads.filter((lead) => {
+    if (seen.has(lead.url)) {
+      return false;
+    }
+    seen.add(lead.url);
+    return true;
+  });
+}
+
+function isSearchLead(lead) {
+  return (
+    lead.status === "hit-search" ||
+    lead.status === "media-search" ||
+    lead.status === "manual" ||
+    lead.tags.includes("manual")
+  );
+}
+
+function searchLabel(lead) {
+  return lead.title
+    .replace(/^X\s+/, "X ")
+    .replace(/\s+Photos?$/i, "")
+    .replace(/\s+Manual$/i, "")
+    .replace(/\s+Source Hits$/i, "")
+    .trim();
 }
 
 function uniqueImageItem() {
@@ -183,6 +228,8 @@ async function clearShortlist() {
 }
 
 async function init() {
+  const config = await requestJson("/api/config");
+  state.searchButtons = config.search_buttons || [];
   const current = await requestJson("/api/state");
   state.leads = current.leads;
   state.shortlist = current.shortlist;

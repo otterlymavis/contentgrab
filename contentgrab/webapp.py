@@ -63,11 +63,14 @@ class ContentGrabHandler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/config":
             query, sources = load_config(DEFAULT_CONFIG)
+            search_sources = [source for source in sources if source.kind != "html"]
+            search_buttons = collect_sources(search_sources, query=query, limit_per_source=1)
             self._send_json(
                 {
                     "default_query": query,
                     "config_path": str(DEFAULT_CONFIG),
                     "sources": [asdict(source) for source in sources],
+                    "search_buttons": leads_to_payload(search_buttons),
                 }
             )
             return

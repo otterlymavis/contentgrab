@@ -22,3 +22,19 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(len(leads), 1)
         self.assertIn("twitter.com/search", leads[0].url)
         self.assertEqual(leads[0].tags, ("x",))
+
+    def test_source_priority_adds_to_score(self) -> None:
+        leads = collect_sources(
+            [
+                Source(
+                    name="X Search",
+                    kind="search_url",
+                    url_template="https://twitter.com/search?q={query}",
+                    priority=10,
+                )
+            ],
+            query="映画",
+            limit_per_source=5,
+        )
+
+        self.assertGreaterEqual(leads[0].score, 12)

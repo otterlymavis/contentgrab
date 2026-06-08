@@ -22,6 +22,26 @@ python -m venv .venv
 
 Open `leads.md` after the run and pick the links you want to investigate.
 
+## Daily workflow
+
+Collect leads:
+
+```powershell
+.\.venv\Scripts\python.exe -m contentgrab collect --config configs\sources.example.toml --query "映画 ドラマ 芸能 アイドル" --limit 15 --min-score 3
+```
+
+Create a shortlist by lead number:
+
+```powershell
+.\.venv\Scripts\python.exe -m contentgrab select --input leads.json --indexes 1,3-5 --markdown shortlist.md --json shortlist.json
+```
+
+Create a shortlist by source tag and score:
+
+```powershell
+.\.venv\Scripts\python.exe -m contentgrab select --input leads.json --tag x --tag yahoo --min-score 6
+```
+
 ## Example sources
 
 The example config includes:
@@ -42,11 +62,13 @@ HTML sources support:
 - `url`: page to fetch.
 - `link_patterns`: optional substrings that candidate URLs must contain.
 - `tags`: labels added to each lead.
+- `priority`: source score boost for your favorite sources.
 
 Search URL sources support:
 
 - `url_template`: template containing `{query}`.
 - `tags`: labels added to the generated lead.
+- `priority`: source score boost for your favorite sources.
 
 ## Next ideas
 

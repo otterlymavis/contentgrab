@@ -21,6 +21,7 @@ def load_config(path: str | Path) -> tuple[str, list[Source]]:
                 link_patterns=tuple(raw.get("link_patterns", [])),
                 tags=tuple(raw.get("tags", [])),
                 enabled=bool(raw.get("enabled", True)),
+                priority=int(raw.get("priority", 0)),
             )
         )
 

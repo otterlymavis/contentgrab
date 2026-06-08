@@ -17,11 +17,20 @@ class LinkParser(HTMLParser):
         self._active_href: str | None = None
         self._active_text: list[str] = []
         self.links: list[tuple[str, str]] = []
+        self.media_urls: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attr_map = dict(attrs)
+        if tag in {"img", "video", "source"}:
+            src = attr_map.get("src") or attr_map.get("data-src")
+            if src:
+                media_url = urljoin(self.base_url, src)
+                if _is_media_url(media_url):
+                    self.media_urls.append(media_url)
+            return
+
         if tag != "a":
             return
-        attr_map = dict(attrs)
         href = attr_map.get("href")
         if href:
             self._active_href = urljoin(self.base_url, href)
@@ -58,9 +67,24 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
         return []
 
     parser = LinkParser(source.url)
-    parser.feed(fetch_html(source.url))
+    try:
+        parser.feed(fetch_html(source.url))
+    except Exception as exc:
+        return [
+            Lead(
+                title=f"{source.name} fetch failed",
+                url=source.url,
+                source=source.name,
+                score=source.priority,
+                tags=source.tags,
+                summary=f"{type(exc).__name__}: {exc}",
+                status="error",
+            )
+        ]
+
     leads: list[Lead] = []
     seen: set[str] = set()
+    page_media_urls = tuple(dict.fromkeys(parser.media_urls))
 
     for title, url in parser.links:
         if len(leads) >= limit:
@@ -69,13 +93,14 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
             continue
         seen.add(url)
         display_title = title or urlparse(url).path.strip("/") or url
-        media_urls = tuple(link for _, link in parser.links if _is_media_url(link))
+        linked_media_urls = tuple(link for _, link in parser.links if _is_media_url(link))
+        media_urls = tuple(dict.fromkeys(page_media_urls + linked_media_urls))
         leads.append(
             Lead(
                 title=display_title[:180],
                 url=url,
                 source=source.name,
-                score=score_text(display_title + " " + url),
+                score=score_text(display_title + " " + url) + source.priority,
                 tags=source.tags,
                 media_urls=media_urls[:5],
             )

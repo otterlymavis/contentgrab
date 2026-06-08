@@ -3,25 +3,37 @@ default_query = "映画 OR ドラマ OR 芸能 OR アニメ OR Netflix OR 配信
 [[sources]]
 name = "Girls Channel Ranking"
 kind = "html"
-url = "https://girlschannel.net/topics/ranking/"
+url = "https://girlschannel.net/rank/"
 link_patterns = ["/topics/"]
 tags = ["girlschannel", "forum", "japan"]
+priority = 2
 
 [[sources]]
-name = "5ch News Plus"
+name = "5ch News Plus Direct"
 kind = "html"
 url = "https://asahi.5ch.net/newsplus/"
 link_patterns = ["/test/read.cgi/newsplus/"]
 tags = ["5ch", "forum", "japan"]
+priority = 1
+enabled = false
+
+[[sources]]
+name = "5ch News Plus Search"
+kind = "search_url"
+url_template = "https://www.google.com/search?q=site%3A5ch.net%2Ftest%2Fread.cgi%2Fnewsplus%2F+{query}"
+tags = ["5ch", "forum", "search"]
+priority = 2
 
 [[sources]]
 name = "X Search"
 kind = "search_url"
 url_template = "https://twitter.com/search?q={query}&src=typed_query&f=top"
 tags = ["x", "twitter", "search"]
+priority = 3
 
 [[sources]]
 name = "Yahoo Realtime Search"
 kind = "search_url"
 url_template = "https://search.yahoo.co.jp/realtime/search?p={query}"
 tags = ["yahoo", "realtime", "search"]
+priority = 2

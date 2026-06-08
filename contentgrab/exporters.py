@@ -12,6 +12,24 @@ def write_json(leads: list[Lead], path: str | Path) -> None:
     Path(path).write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def read_json(path: str | Path) -> list[Lead]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    return [
+        Lead(
+            title=str(item["title"]),
+            url=str(item["url"]),
+            source=str(item["source"]),
+            score=int(item["score"]),
+            tags=tuple(item.get("tags", [])),
+            summary=str(item.get("summary", "")),
+            media_urls=tuple(item.get("media_urls", [])),
+            status=str(item.get("status", "ok")),
+            collected_at=str(item.get("collected_at", "")),
+        )
+        for item in payload
+    ]
+
+
 def write_markdown(leads: list[Lead], path: str | Path) -> None:
     lines = ["# Content Leads", ""]
     for index, lead in enumerate(leads, start=1):
@@ -22,6 +40,7 @@ def write_markdown(leads: list[Lead], path: str | Path) -> None:
                 "",
                 f"- Source: {lead.source}",
                 f"- Score: {lead.score}",
+                f"- Status: {lead.status}",
                 f"- Tags: {tags}",
                 f"- URL: {lead.url}",
             ]

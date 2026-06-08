@@ -32,7 +32,7 @@ def _search_url_lead(source: Source, query: str) -> Lead:
         title=title,
         url=url,
         source=source.name,
-        score=score_text(query),
+        score=score_text(query) + source.priority,
         tags=source.tags,
         summary="Open this search URL manually; direct scraping may require auth or violate platform rules.",
     )

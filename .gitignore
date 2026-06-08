@@ -8,4 +8,6 @@ build/
 *.egg-info/
 leads.json
 leads.md
+shortlist.json
+shortlist.md
 .env

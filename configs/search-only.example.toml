@@ -5,9 +5,11 @@ name = "X Search"
 kind = "search_url"
 url_template = "https://twitter.com/search?q={query}&src=typed_query&f=top"
 tags = ["x", "twitter", "search"]
+priority = 3
 
 [[sources]]
 name = "Yahoo Realtime Search"
 kind = "search_url"
 url_template = "https://search.yahoo.co.jp/realtime/search?p={query}"
 tags = ["yahoo", "realtime", "search"]
+priority = 2

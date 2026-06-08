@@ -13,6 +13,7 @@ class Source:
     link_patterns: tuple[str, ...] = ()
     tags: tuple[str, ...] = ()
     enabled: bool = True
+    priority: int = 0
 
 
 @dataclass(frozen=True)
@@ -24,4 +25,5 @@ class Lead:
     tags: tuple[str, ...] = ()
     summary: str = ""
     media_urls: tuple[str, ...] = ()
+    status: str = "ok"
     collected_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())

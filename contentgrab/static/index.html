@@ -8,72 +8,70 @@
   </head>
   <body>
     <main class="app-shell">
-      <section class="control-panel" aria-label="Collection controls">
+      <header class="topbar">
         <div class="brand">
           <div class="mark">CG</div>
           <div>
             <h1>contentgrab</h1>
-            <p>Japanese hit tweets and media leads</p>
+            <p>Japanese hit tweets with media</p>
           </div>
         </div>
 
-        <form id="collect-form" class="form-stack">
-          <div class="mode-card">
-            <strong>Hit tweet mode</strong>
-            <p>Opens X search lanes for high-engagement Japanese tweets that contain images or video.</p>
-          </div>
-          <div class="inline-fields">
-            <label>
-              Extra source limit
-              <input id="limit" type="number" min="1" max="50" value="12">
-            </label>
-            <label>
-              Min score
-              <input id="min-score" type="number" min="0" value="1">
-            </label>
-          </div>
+        <form id="collect-form" class="collect-bar">
           <button class="primary" type="submit">Collect hit tweets</button>
+          <details class="options">
+            <summary>Options</summary>
+            <div class="option-grid">
+              <label>
+                Extra source limit
+                <input id="limit" type="number" min="1" max="50" value="12">
+              </label>
+              <label>
+                Min score
+                <input id="min-score" type="number" min="0" value="1">
+              </label>
+            </div>
+          </details>
         </form>
-
-        <div class="source-box">
-          <div class="panel-title">Sources</div>
-          <div id="sources" class="source-list"></div>
-        </div>
-      </section>
+      </header>
 
       <section class="lead-panel" aria-label="Collected leads">
-        <div class="toolbar">
+        <div class="section-head">
           <div>
-            <h2>Review Queue</h2>
+            <h2>Hit Tweet Leads</h2>
             <p id="lead-count">No leads collected yet</p>
           </div>
-          <div class="filters">
-            <button class="chip is-active" type="button" data-filter="all">All</button>
-            <button class="chip" type="button" data-filter="hit-search">Hit tweets</button>
-            <button class="chip" type="button" data-filter="media-search">Trend media</button>
-            <button class="chip" type="button" data-filter="ok">Fetched media</button>
-            <button class="chip" type="button" data-filter="manual">Manual</button>
-            <button class="chip" type="button" data-filter="error">Source notes</button>
+        </div>
+
+        <div class="filters">
+          <button class="chip is-active" type="button" data-filter="all">All</button>
+          <button class="chip" type="button" data-filter="hit-search">Hit tweets</button>
+          <button class="chip" type="button" data-filter="ok">Previews</button>
+          <button class="chip" type="button" data-filter="manual">Manual</button>
+        </div>
+
+        <details class="advanced-filters">
+          <summary>More filters</summary>
+          <div class="review-controls">
+            <label>
+              Source
+              <select id="source-filter">
+                <option value="all">All sources</option>
+              </select>
+            </label>
+            <label class="check-row compact-check">
+              <input id="preview-only" type="checkbox">
+              Preview only
+            </label>
           </div>
-        </div>
-        <div class="review-controls">
-          <label>
-            Source
-            <select id="source-filter">
-              <option value="all">All sources</option>
-            </select>
-          </label>
-          <label class="check-row compact-check">
-            <input id="preview-only" type="checkbox">
-            Preview only
-          </label>
-        </div>
+        </details>
+
         <div id="status" class="status" role="status"></div>
         <div id="leads" class="lead-grid"></div>
       </section>
 
       <aside class="shortlist-panel" aria-label="Shortlist">
-        <div class="toolbar compact">
+        <div class="section-head compact">
           <div>
             <h2>Shortlist</h2>
             <p id="shortlist-count">0 saved</p>
@@ -84,28 +82,22 @@
           </div>
         </div>
 
-        <form id="shortlist-form" class="form-stack compact-form">
-          <label>
-            Pick indexes
-            <input id="indexes" type="text" placeholder="1,3-5">
-          </label>
-          <label>
-            Tags
-            <input id="tags" type="text" placeholder="x,yahoo,girlschannel">
-          </label>
-          <label>
-            Min score
-            <input id="select-min-score" type="number" min="0" placeholder="6">
-          </label>
-          <label class="check-row">
-            <input id="include-errors" type="checkbox">
-            Include source notes
-          </label>
-          <button class="secondary full" type="submit">Build shortlist</button>
+        <form id="shortlist-form" class="hidden-controls">
+          <input id="indexes" type="text">
+          <input id="tags" type="text">
+          <input id="select-min-score" type="number">
+          <input id="include-errors" type="checkbox">
         </form>
 
         <div id="shortlist" class="shortlist"></div>
       </aside>
+
+      <section class="sources-panel" aria-label="Sources">
+        <details>
+          <summary>Sources</summary>
+          <div id="sources" class="source-list"></div>
+        </details>
+      </section>
     </main>
     <script src="/static/app.js"></script>
   </body>

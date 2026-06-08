@@ -50,22 +50,6 @@
           <button class="chip" type="button" data-filter="manual">Manual</button>
         </div>
 
-        <details class="advanced-filters">
-          <summary>More filters</summary>
-          <div class="review-controls">
-            <label>
-              Source
-              <select id="source-filter">
-                <option value="all">All sources</option>
-              </select>
-            </label>
-            <label class="check-row compact-check">
-              <input id="preview-only" type="checkbox">
-              Preview only
-            </label>
-          </div>
-        </details>
-
         <div id="status" class="status" role="status"></div>
         <div id="leads" class="lead-grid"></div>
       </section>
@@ -82,22 +66,8 @@
           </div>
         </div>
 
-        <form id="shortlist-form" class="hidden-controls">
-          <input id="indexes" type="text">
-          <input id="tags" type="text">
-          <input id="select-min-score" type="number">
-          <input id="include-errors" type="checkbox">
-        </form>
-
         <div id="shortlist" class="shortlist"></div>
       </aside>
-
-      <section class="sources-panel" aria-label="Sources">
-        <details>
-          <summary>Sources</summary>
-          <div id="sources" class="source-list"></div>
-        </details>
-      </section>
     </main>
     <script src="/static/app.js"></script>
   </body>

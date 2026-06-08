@@ -2,27 +2,17 @@ const state = {
   leads: [],
   shortlist: [],
   filter: "all",
-  sourceFilter: "all",
-  previewOnly: false,
 };
 
 const els = {
   collectForm: document.querySelector("#collect-form"),
-  shortlistForm: document.querySelector("#shortlist-form"),
   limit: document.querySelector("#limit"),
   minScore: document.querySelector("#min-score"),
-  selectMinScore: document.querySelector("#select-min-score"),
-  indexes: document.querySelector("#indexes"),
-  tags: document.querySelector("#tags"),
-  includeErrors: document.querySelector("#include-errors"),
-  sourceFilter: document.querySelector("#source-filter"),
-  previewOnly: document.querySelector("#preview-only"),
   clearShortlist: document.querySelector("#clear-shortlist"),
   leads: document.querySelector("#leads"),
   shortlist: document.querySelector("#shortlist"),
   leadCount: document.querySelector("#lead-count"),
   shortlistCount: document.querySelector("#shortlist-count"),
-  sources: document.querySelector("#sources"),
   status: document.querySelector("#status"),
 };
 
@@ -51,6 +41,9 @@ function escapeHtml(value) {
 }
 
 function renderSources(sources) {
+  if (!els.sources) {
+    return;
+  }
   els.sources.innerHTML = sources
     .map((source) => {
       const enabled = source.enabled ? "enabled" : "paused";
@@ -65,21 +58,16 @@ function renderSources(sources) {
 }
 
 function renderLeads() {
-  const leads = state.leads.filter((lead) => {
-    const statusMatch = state.filter === "all" || lead.status === state.filter;
-    const sourceMatch = state.sourceFilter === "all" || lead.source === state.sourceFilter;
-    const previewMatch = !state.previewOnly || hasPreview(lead);
-    return statusMatch && sourceMatch && previewMatch;
-  });
-  els.leadCount.textContent = `${state.leads.length} media leads - ${leads.length} shown`;
+  const leads = state.leads.filter((lead) => state.filter === "all" || lead.status === state.filter);
+  els.leadCount.textContent = `${state.leads.length} media leads - ${leads.length} shown - ${state.shortlist.length} selected`;
   els.leads.innerHTML = leads.map(renderLeadCard).join("");
-  renderSourceFilter();
 }
 
 function renderLeadCard(lead) {
   const index = state.leads.indexOf(lead) + 1;
   const tags = lead.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   const badgeClass = lead.status === "error" ? "badge error" : "badge";
+  const selected = isSelected(lead);
   const actionText =
     lead.status === "hit-search" ? "Open X posts" : lead.status === "media-search" ? "Open media search" : "Open";
   const preview = renderPreview(lead);
@@ -89,7 +77,7 @@ function renderLeadCard(lead) {
     .map((url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer"><img src="${escapeHtml(url)}" alt=""></a>`)
     .join("");
   return `
-    <article class="lead-card ${escapeHtml(lead.status)}">
+    <article class="lead-card ${escapeHtml(lead.status)} ${selected ? "selected" : ""}">
       <div class="lead-meta">
         <span class="${badgeClass}">#${index}</span>
         <span class="badge">score ${lead.score}</span>
@@ -102,7 +90,9 @@ function renderLeadCard(lead) {
       <div class="tag-row">${tags}</div>
       ${media ? `<div class="media-strip">${media}</div>` : ""}
       <div class="card-actions">
-        <button class="secondary" type="button" data-add="${index}">Shortlist</button>
+        <button class="${selected ? "primary" : "secondary"}" type="button" data-toggle="${index}">
+          ${selected ? "Selected" : "Select"}
+        </button>
         <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${actionText}</a>
       </div>
     </article>
@@ -113,15 +103,8 @@ function hasPreview(lead) {
   return Boolean(lead.preview_title || lead.preview_description || lead.media_urls.length || lead.status === "media-search");
 }
 
-function renderSourceFilter() {
-  const sources = [...new Set(state.leads.map((lead) => lead.source))].sort();
-  const current = sources.includes(state.sourceFilter) ? state.sourceFilter : "all";
-  state.sourceFilter = current;
-  els.sourceFilter.innerHTML = [
-    '<option value="all">All sources</option>',
-    ...sources.map((source) => `<option value="${escapeHtml(source)}">${escapeHtml(source)}</option>`),
-  ].join("");
-  els.sourceFilter.value = current;
+function isSelected(lead) {
+  return state.shortlist.some((item) => item.url === lead.url);
 }
 
 function renderPreview(lead) {
@@ -141,14 +124,17 @@ function renderPreview(lead) {
 }
 
 function renderShortlist() {
-  els.shortlistCount.textContent = `${state.shortlist.length} saved`;
+  els.shortlistCount.textContent = `${state.shortlist.length} selected`;
   els.shortlist.innerHTML = state.shortlist
     .map(
       (lead) => `
         <article class="shortlist-card">
           <a href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
           <p>${escapeHtml(lead.source)} - score ${lead.score}</p>
-          <button class="secondary" type="button" data-remove="${escapeHtml(lead.url)}">Remove</button>
+          <div class="shortlist-card-actions">
+            <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
+            <button class="secondary" type="button" data-remove="${escapeHtml(lead.url)}">Remove</button>
+          </div>
         </article>
       `
     )
@@ -169,7 +155,6 @@ async function collect(event) {
     });
     state.leads = payload.leads;
     state.shortlist = payload.shortlist;
-    state.sourceFilter = "all";
     renderLeads();
     renderShortlist();
     setStatus("Entertainment hit post collection complete.");
@@ -180,31 +165,13 @@ async function collect(event) {
   }
 }
 
-async function buildShortlist(event) {
-  event.preventDefault();
-  const tags = els.tags.value
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
-  const payload = await requestJson("/api/shortlist", {
-    method: "POST",
-    body: JSON.stringify({
-      indexes: els.indexes.value,
-      tags,
-      min_score: els.selectMinScore.value,
-      include_errors: els.includeErrors.checked,
-    }),
-  });
-  state.shortlist = payload.shortlist;
-  renderShortlist();
-}
-
 async function addLead(index) {
   const payload = await requestJson("/api/shortlist/add", {
     method: "POST",
     body: JSON.stringify({ index }),
   });
   state.shortlist = payload.shortlist;
+  renderLeads();
   renderShortlist();
 }
 
@@ -214,7 +181,20 @@ async function removeLead(url) {
     body: JSON.stringify({ url }),
   });
   state.shortlist = payload.shortlist;
+  renderLeads();
   renderShortlist();
+}
+
+async function toggleLead(index) {
+  const lead = state.leads[index - 1];
+  if (!lead) {
+    return;
+  }
+  if (isSelected(lead)) {
+    await removeLead(lead.url);
+  } else {
+    await addLead(index);
+  }
 }
 
 async function clearShortlist() {
@@ -223,6 +203,7 @@ async function clearShortlist() {
     body: JSON.stringify({}),
   });
   state.shortlist = payload.shortlist;
+  renderLeads();
   renderShortlist();
 }
 
@@ -237,20 +218,11 @@ async function init() {
 }
 
 els.collectForm.addEventListener("submit", collect);
-els.shortlistForm.addEventListener("submit", buildShortlist);
-els.sourceFilter.addEventListener("change", () => {
-  state.sourceFilter = els.sourceFilter.value;
-  renderLeads();
-});
-els.previewOnly.addEventListener("change", () => {
-  state.previewOnly = els.previewOnly.checked;
-  renderLeads();
-});
 els.clearShortlist.addEventListener("click", clearShortlist);
 els.leads.addEventListener("click", (event) => {
-  const index = event.target.dataset.add;
+  const index = event.target.dataset.toggle;
   if (index) {
-    addLead(Number(index));
+    toggleLead(Number(index));
   }
 });
 els.shortlist.addEventListener("click", (event) => {

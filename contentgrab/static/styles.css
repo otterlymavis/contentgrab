@@ -40,8 +40,7 @@ select {
 
 .topbar,
 .lead-panel,
-.shortlist-panel,
-.sources-panel {
+.shortlist-panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -187,8 +186,7 @@ select:focus {
 }
 
 .lead-panel,
-.shortlist-panel,
-.sources-panel {
+.shortlist-panel {
   padding: 16px;
 }
 
@@ -207,28 +205,6 @@ select:focus {
   margin-bottom: 12px;
 }
 
-.advanced-filters {
-  margin-bottom: 10px;
-}
-
-.review-controls {
-  display: grid;
-  grid-template-columns: minmax(180px, 260px) auto;
-  gap: 14px;
-  align-items: end;
-  margin-top: 10px;
-}
-
-.check-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.check-row input {
-  width: 16px;
-}
-
 .status {
   min-height: 22px;
   margin-bottom: 10px;
@@ -237,15 +213,13 @@ select:focus {
 }
 
 .lead-grid,
-.shortlist,
-.source-list {
+.shortlist {
   display: grid;
   gap: 12px;
 }
 
 .lead-card,
-.shortlist-card,
-.source-item {
+.shortlist-card {
   display: grid;
   gap: 10px;
   padding: 14px;
@@ -256,6 +230,11 @@ select:focus {
 
 .lead-card.error {
   border-color: rgba(160, 67, 27, 0.35);
+}
+
+.lead-card.selected {
+  border-color: rgba(15, 123, 108, 0.55);
+  box-shadow: 0 0 0 3px rgba(15, 123, 108, 0.12);
 }
 
 .lead-meta,
@@ -368,16 +347,13 @@ select:focus {
   justify-content: flex-end;
 }
 
+.shortlist-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .hidden-controls {
   display: none;
-}
-
-.sources-panel {
-  grid-column: 1 / -1;
-}
-
-.source-item strong {
-  display: block;
 }
 
 @media (max-width: 900px) {
@@ -413,7 +389,6 @@ select:focus {
     padding: 10px;
   }
 
-  .review-controls,
   .media-strip {
     grid-template-columns: 1fr;
   }

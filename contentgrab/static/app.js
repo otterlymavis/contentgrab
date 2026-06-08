@@ -1,7 +1,6 @@
 const state = {
   leads: [],
   shortlist: [],
-  filter: "all",
 };
 
 const els = {
@@ -58,18 +57,13 @@ function renderSources(sources) {
 }
 
 function renderLeads() {
-  const leads = state.leads.filter((lead) => state.filter === "all" || lead.status === state.filter);
-  els.leadCount.textContent = `${state.leads.length} media leads - ${leads.length} shown - ${state.shortlist.length} selected`;
-  els.leads.innerHTML = leads.map(renderLeadCard).join("");
+  els.leadCount.textContent = `${state.leads.length} links - ${state.shortlist.length} selected`;
+  els.leads.innerHTML = state.leads.map(renderLeadCard).join("");
 }
 
 function renderLeadCard(lead) {
   const index = state.leads.indexOf(lead) + 1;
-  const tags = lead.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
-  const badgeClass = lead.status === "error" ? "badge error" : "badge";
   const selected = isSelected(lead);
-  const actionText =
-    lead.status === "hit-search" ? "Open X posts" : lead.status === "media-search" ? "Open media search" : "Open";
   const preview = renderPreview(lead);
   const media = lead.media_urls
     .filter((url) => /\.(jpe?g|png|gif|webp)$/i.test(url))
@@ -78,22 +72,15 @@ function renderLeadCard(lead) {
     .join("");
   return `
     <article class="lead-card ${escapeHtml(lead.status)} ${selected ? "selected" : ""}">
-      <div class="lead-meta">
-        <span class="${badgeClass}">#${index}</span>
-        <span class="badge">score ${lead.score}</span>
-        <span class="${badgeClass}">${escapeHtml(lead.status)}</span>
-        <span class="tag">${escapeHtml(lead.source)}</span>
-      </div>
       <a class="lead-title" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
-      ${lead.summary ? `<p class="note">${escapeHtml(lead.summary)}</p>` : ""}
+      <a class="plain-url" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(compactUrl(lead.url))}</a>
       ${preview}
-      <div class="tag-row">${tags}</div>
       ${media ? `<div class="media-strip">${media}</div>` : ""}
       <div class="card-actions">
         <button class="${selected ? "primary" : "secondary"}" type="button" data-toggle="${index}">
           ${selected ? "Selected" : "Select"}
         </button>
-        <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${actionText}</a>
+        <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
       </div>
     </article>
   `;
@@ -108,19 +95,24 @@ function isSelected(lead) {
 }
 
 function renderPreview(lead) {
-  if (!lead.preview_title && !lead.preview_description && lead.status !== "media-search") {
+  if (!lead.preview_title && !lead.preview_description && lead.status !== "media-search" && lead.status !== "hit-search") {
     return "";
   }
-  const eyebrow =
-    lead.status === "media-search" ? "Trend media search" : lead.media_urls.length ? "Preview available" : "Source preview";
-  const label = lead.status === "hit-search" ? "X hit post search" : eyebrow;
+  const previewText = lead.preview_title || lead.title;
   return `
     <div class="preview-box">
-      <span>${label}</span>
-      ${lead.preview_title ? `<strong>${escapeHtml(lead.preview_title)}</strong>` : ""}
-      ${lead.preview_description ? `<p>${escapeHtml(lead.preview_description)}</p>` : ""}
+      <strong>${escapeHtml(previewText)}</strong>
     </div>
   `;
+}
+
+function compactUrl(value) {
+  try {
+    const url = new URL(value);
+    return `${url.hostname}${url.pathname === "/" ? "" : url.pathname}`;
+  } catch {
+    return value;
+  }
 }
 
 function renderShortlist() {
@@ -130,7 +122,6 @@ function renderShortlist() {
       (lead) => `
         <article class="shortlist-card">
           <a href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
-          <p>${escapeHtml(lead.source)} - score ${lead.score}</p>
           <div class="shortlist-card-actions">
             <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
             <button class="secondary" type="button" data-remove="${escapeHtml(lead.url)}">Remove</button>
@@ -231,13 +222,4 @@ els.shortlist.addEventListener("click", (event) => {
     removeLead(url);
   }
 });
-document.querySelectorAll("[data-filter]").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll("[data-filter]").forEach((item) => item.classList.remove("is-active"));
-    button.classList.add("is-active");
-    state.filter = button.dataset.filter;
-    renderLeads();
-  });
-});
-
 init().catch((error) => setStatus(error.message));

@@ -41,7 +41,8 @@ function escapeHtml(value) {
 function renderLeads() {
   const visibleLeads = state.leads
     .map((lead, index) => ({ lead, index }))
-    .filter((item) => item.lead.media_urls.length);
+    .filter((item) => imageUrls(item.lead).length)
+    .filter(uniqueImageItem());
   els.leadCount.textContent = visibleLeads.length ? `${visibleLeads.length} photos` : "No photos yet";
   els.shortlistCount.textContent = `${state.shortlist.length} selected`;
   document.querySelectorAll(".selection-action").forEach((element) => {
@@ -50,21 +51,36 @@ function renderLeads() {
   els.leads.innerHTML = visibleLeads.map(({ lead, index }) => renderLeadCard(lead, index + 1)).join("");
 }
 
+function uniqueImageItem() {
+  const seen = new Set();
+  return (item) => {
+    const key = imageKey(imageUrls(item.lead)[0]);
+    if (!key || seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  };
+}
+
 function renderLeadCard(lead, index) {
   const selected = isSelected(lead);
-  const media = lead.media_urls
-    .filter(isImageUrl)
-    .slice(0, 5)
-    .map((url) => `<img src="${escapeHtml(url)}" alt="">`)
-    .join("");
+  const imageUrl = imageUrls(lead)[0];
   return `
     <article class="lead-card ${escapeHtml(lead.status)} ${selected ? "selected" : ""}">
       <input class="pick" type="checkbox" data-toggle="${index}" ${selected ? "checked" : ""} aria-label="${escapeHtml(lead.title)}">
-      <a class="content-tile" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(lead.title)}">
-        <div class="media-strip">${media}</div>
-      </a>
+      <div class="content-card">
+        <a class="content-tile" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(lead.title)}">
+          <img src="${escapeHtml(imageUrl)}" alt="">
+        </a>
+        <a class="source-link" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(compactUrl(lead.url))}</a>
+      </div>
     </article>
   `;
+}
+
+function imageUrls(lead) {
+  return lead.media_urls.filter(isImageUrl);
 }
 
 function isImageUrl(value) {
@@ -72,6 +88,24 @@ function isImageUrl(value) {
     return /\.(jpe?g|png|gif|webp)$/i.test(new URL(value).pathname);
   } catch {
     return /\.(jpe?g|png|gif|webp)(?:\?|$)/i.test(value);
+  }
+}
+
+function imageKey(value) {
+  try {
+    const url = new URL(value);
+    return `${url.hostname}${url.pathname}`.toLowerCase();
+  } catch {
+    return value.split("?")[0].toLowerCase();
+  }
+}
+
+function compactUrl(value) {
+  try {
+    const url = new URL(value);
+    return `${url.hostname}${url.pathname}`;
+  } catch {
+    return value;
   }
 }
 

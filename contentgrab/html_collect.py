@@ -90,6 +90,7 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
 
     leads: list[Lead] = []
     seen: set[str] = set()
+    seen_media: set[str] = set()
     page_media_urls = tuple(dict.fromkeys(parser.media_urls))
 
     for title, url in parser.links:
@@ -99,12 +100,17 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
             continue
         seen.add(url)
         display_title = title or urlparse(url).path.strip("/") or url
-        linked_media_urls = tuple(link for _, link in parser.links if _is_media_url(link))
         article_media_urls = tuple(parser.link_media_urls.get(url, ()))
-        media_urls = tuple(dict.fromkeys(page_media_urls + linked_media_urls))
-        media_urls = tuple(dict.fromkeys(article_media_urls + media_urls))
+        linked_media_urls = tuple(link for _, link in parser.links if link == url and _is_media_url(link))
+        fallback_media_urls = () if source.require_media else page_media_urls
+        media_urls = tuple(dict.fromkeys(article_media_urls + linked_media_urls + fallback_media_urls))
         if source.require_media and not media_urls:
             continue
+        media_key = _media_key(media_urls[0]) if media_urls else ""
+        if media_key and media_key in seen_media:
+            continue
+        if media_key:
+            seen_media.add(media_key)
         leads.append(
             Lead(
                 title=display_title[:180],
@@ -130,3 +136,8 @@ def _is_candidate(url: str, patterns: tuple[str, ...]) -> bool:
 
 def _is_media_url(url: str) -> bool:
     return urlparse(url).path.lower().endswith(IMAGE_EXTENSIONS)
+
+
+def _media_key(url: str) -> str:
+    parsed = urlparse(url)
+    return f"{parsed.netloc}{parsed.path}".lower()

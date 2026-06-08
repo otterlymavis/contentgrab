@@ -1,0 +1,13 @@
+default_query = "映画 OR ドラマ OR 芸能 OR アニメ OR Netflix OR 配信"
+
+[[sources]]
+name = "X Search"
+kind = "search_url"
+url_template = "https://twitter.com/search?q={query}&src=typed_query&f=top"
+tags = ["x", "twitter", "search"]
+
+[[sources]]
+name = "Yahoo Realtime Search"
+kind = "search_url"
+url_template = "https://search.yahoo.co.jp/realtime/search?p={query}"
+tags = ["yahoo", "realtime", "search"]

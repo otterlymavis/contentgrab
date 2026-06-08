@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "contentgrab"
+version = "0.1.0"
+description = "Collect Japanese entertainment culture content leads from configurable social and forum sources."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "contentgrab" }]
+dependencies = []
+
+[project.scripts]
+contentgrab = "contentgrab.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["contentgrab"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

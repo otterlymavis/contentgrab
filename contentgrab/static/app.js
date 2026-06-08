@@ -74,7 +74,10 @@ function isSelected(lead) {
 }
 
 function renderPreview(lead) {
-  if (!lead.preview_title && !lead.preview_description && lead.status !== "media-search" && lead.status !== "hit-search") {
+  if (lead.status === "media-search" || lead.status === "hit-search") {
+    return "";
+  }
+  if (!lead.preview_title && !lead.preview_description) {
     return "";
   }
   const previewText = lead.preview_title || lead.title;

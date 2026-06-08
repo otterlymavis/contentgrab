@@ -117,7 +117,6 @@ p {
 
 .lead-card {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
   gap: 8px;
   padding: 10px 0;
   border-top: 1px solid var(--line);
@@ -132,13 +131,6 @@ p {
 .lead-card.selected {
   padding-left: 8px;
   border-left: 2px solid var(--ink);
-}
-
-.pick {
-  width: 18px;
-  height: 18px;
-  margin: 4px 0 0;
-  accent-color: var(--accent);
 }
 
 .content-card {
@@ -172,6 +164,16 @@ p {
   text-decoration: underline;
 }
 
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.card-actions .primary,
+.card-actions .secondary {
+  flex: 1;
+}
+
 .review-bar {
   display: flex;
   flex-wrap: nowrap;
@@ -201,9 +203,5 @@ p {
 
   .review-bar {
     display: grid;
-  }
-
-  .lead-card {
-    grid-template-columns: auto minmax(0, 1fr);
   }
 }

@@ -68,12 +68,17 @@ function renderLeadCard(lead, index) {
   const imageUrl = imageUrls(lead)[0];
   return `
     <article class="lead-card ${escapeHtml(lead.status)} ${selected ? "selected" : ""}">
-      <input class="pick" type="checkbox" data-toggle="${index}" ${selected ? "checked" : ""} aria-label="${escapeHtml(lead.title)}">
       <div class="content-card">
         <a class="content-tile" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(lead.title)}">
           <img src="${escapeHtml(imageUrl)}" alt="">
         </a>
         <a class="source-link" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(compactUrl(lead.url))}</a>
+        <div class="card-actions">
+          <button class="${selected ? "primary" : "secondary"}" type="button" data-toggle="${index}">
+            ${selected ? "Selected" : "Select"}
+          </button>
+          <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
+        </div>
       </div>
     </article>
   `;

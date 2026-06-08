@@ -8,6 +8,8 @@ from datetime import UTC, datetime
 class Source:
     name: str
     kind: str
+    query: str = ""
+    search_mode: str = "top"
     url: str | None = None
     url_template: str | None = None
     link_patterns: tuple[str, ...] = ()

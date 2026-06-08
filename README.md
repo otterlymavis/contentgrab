@@ -1,6 +1,6 @@
 # contentgrab
 
-`contentgrab` is a small local app and CLI for collecting trending Japanese social media leads that point toward posts with images or video. It is designed for creators who want links, context, and light metadata first, then choose what is worth turning into a post.
+`contentgrab` is a small local app and CLI for finding Japanese hit-tweet leads that point toward posts with images or video. It is designed for creators who want links, context, and light metadata first, then choose what is worth turning into a post.
 
 The tool does not download images or videos. It collects links to posts, pages, and obvious media URLs so you can review sources yourself and stay mindful of platform rules and copyright.
 
@@ -8,7 +8,8 @@ The tool does not download images or videos. It collects links to posts, pages, 
 
 - Reads source definitions from a TOML config.
 - Collects links from HTML pages such as forums, rankings, and news pages.
-- Collects Japan X/Twitter trend terms and turns them into media-filtered X searches.
+- Opens X/Twitter search lanes for high-engagement Japanese tweets that contain images or video.
+- Keeps trend-topic media searches as backup context, not the primary workflow.
 - Adds manual trend URLs for sources that are not safe or practical to scrape directly.
 - Scores leads with Japanese entertainment keywords.
 - Exports Markdown for daily review and JSON for automation.
@@ -25,7 +26,7 @@ Open `leads.md` after the run and pick the links you want to investigate.
 
 ## Daily workflow
 
-Collect trending media leads:
+Collect hit-tweet and media leads:
 
 ```powershell
 .\.venv\Scripts\python.exe -m contentgrab collect --config configs\sources.example.toml --limit 15 --min-score 1
@@ -53,13 +54,14 @@ Run the review dashboard:
 
 Open [http://127.0.0.1:8765](http://127.0.0.1:8765).
 
-The app lets you collect leads, filter usable results versus source notes, add individual leads to a shortlist, build a shortlist by indexes/tags/score, and open the exported Markdown shortlist.
+The app lets you collect hit-tweet leads, filter by source/status/preview availability, add individual leads to a shortlist, build a shortlist by indexes/tags/score, clear stale shortlists, and open the exported Markdown shortlist.
 
 ## Example sources
 
 The example config includes:
 
-- Japan X/Twitter trends converted into media-filtered X searches.
+- X/Twitter hit-tweet search lanes using media and engagement filters.
+- Japan X/Twitter trend terms converted into media-filtered searches as a backup source.
 - Japan YouTube trending videos with thumbnail previews when detected.
 - Girls Channel ranking pages with media links when detected.
 - Manual cross-check links for X Explore, Yahoo realtime, Google Trends Japan, and TikTok Creative Center Japan.
@@ -80,6 +82,7 @@ HTML sources support:
 
 Trend and manual sources support:
 
+- `kind = "x_hit_media_search"`: creates X search lanes for individual high-engagement media tweets.
 - `kind = "x_trends_media"`: fetches Japan trend terms and creates X media-search leads.
 - `kind = "youtube_trends"`: fetches Japan YouTube trend links and creates thumbnail preview leads.
 - `kind = "manual_url"`: creates a manual review link for blocked or personalized trend surfaces.

@@ -6,6 +6,8 @@ from contentgrab.collectors import (
     _x_media_search_url,
     _youtube_video_id,
     _merge_tags,
+    _format_hit_query,
+    _x_search_url,
     collect_sources,
 )
 from contentgrab.models import Source
@@ -75,6 +77,22 @@ class CollectorTests(unittest.TestCase):
 
     def test_media_search_status_ranks_first(self) -> None:
         self.assertGreater(_status_rank("media-search"), _status_rank("ok"))
+
+    def test_hit_search_status_ranks_before_trend_media_search(self) -> None:
+        self.assertGreater(_status_rank("hit-search"), _status_rank("media-search"))
+
+    def test_x_search_url_encodes_hit_query(self) -> None:
+        url = _x_search_url("lang:ja filter:media min_faves:1000 -filter:replies", "top")
+
+        self.assertIn("filter%3Amedia", url)
+        self.assertIn("min_faves%3A1000", url)
+        self.assertIn("f=top", url)
+
+    def test_format_hit_query_replaces_since_date(self) -> None:
+        query = _format_hit_query("lang:ja since:{since_2d}")
+
+        self.assertNotIn("{since_2d}", query)
+        self.assertIn("since:", query)
 
     def test_youtube_video_id_parses_watch_and_short_urls(self) -> None:
         self.assertEqual(_youtube_video_id("https://www.youtube.com/watch?v=abc123"), "abc123")

@@ -1,12 +1,48 @@
 default_query = ""
 
 [[sources]]
-name = "Japan X Trends Media"
+name = "X JP Hit Media Tweets"
+kind = "x_hit_media_search"
+query = "lang:ja filter:media min_faves:1000 -filter:replies"
+search_mode = "top"
+tags = ["x", "twitter", "japan", "hit-tweets"]
+priority = 50
+summary = "High-like Japanese tweets containing images or video."
+
+[[sources]]
+name = "X JP Fresh Hit Media"
+kind = "x_hit_media_search"
+query = "lang:ja filter:media min_faves:300 since:{since_2d} -filter:replies"
+search_mode = "live"
+tags = ["x", "twitter", "japan", "fresh", "hit-tweets"]
+priority = 48
+summary = "Recent Japanese media tweets that are already getting traction."
+
+[[sources]]
+name = "X JP Hit Video Tweets"
+kind = "x_hit_media_search"
+query = "lang:ja filter:videos min_faves:500 -filter:replies"
+search_mode = "top"
+tags = ["x", "twitter", "japan", "video", "hit-tweets"]
+priority = 46
+summary = "High-engagement Japanese tweets containing video."
+
+[[sources]]
+name = "X JP Hit Image Tweets"
+kind = "x_hit_media_search"
+query = "lang:ja filter:images min_faves:800 -filter:replies"
+search_mode = "top"
+tags = ["x", "twitter", "japan", "images", "hit-tweets"]
+priority = 44
+summary = "High-engagement Japanese tweets containing images."
+
+[[sources]]
+name = "Japan X Trend Media Searches"
 kind = "x_trends_media"
 url = "https://trends24.in/japan/"
 tags = ["x", "twitter", "japan", "trending"]
-priority = 30
-summary = "Current Japan X trend. Opens X search filtered to posts containing media."
+priority = 20
+summary = "Backup source: current Japan X trend terms opened as media searches."
 
 [[sources]]
 name = "Japan YouTube Trending"
@@ -41,7 +77,7 @@ kind = "manual_url"
 url = "https://twitter.com/explore/tabs/trending"
 tags = ["x", "twitter", "manual", "trending"]
 priority = 5
-summary = "Open X Explore if the trend seed page misses local personalized trends."
+summary = "Manual X surface for cross-checking personalized popular posts."
 
 [[sources]]
 name = "Yahoo Realtime Trends"

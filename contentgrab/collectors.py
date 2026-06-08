@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from datetime import UTC, datetime, timedelta
 from urllib.parse import parse_qs, quote_plus, urlencode, urlparse
 
 from .html_collect import LinkParser, collect_html_source, fetch_html
@@ -22,6 +23,8 @@ def collect_sources(sources: list[Source], query: str = "", limit_per_source: in
             leads.append(_manual_url_lead(source))
         elif source.kind == "x_trends_media":
             leads.extend(_x_trends_media_leads(source, limit_per_source))
+        elif source.kind == "x_hit_media_search":
+            leads.append(_x_hit_media_search_lead(source))
         elif source.kind == "youtube_trends":
             leads.extend(_youtube_trends_leads(source, limit_per_source))
         else:
@@ -119,6 +122,40 @@ def _x_media_search_url(term: str) -> str:
     return f"https://twitter.com/search?{query}"
 
 
+def _x_hit_media_search_lead(source: Source) -> Lead:
+    query = _format_hit_query(source.query)
+    if not query:
+        raise ValueError(f"{source.name} is missing query")
+    return Lead(
+        title=source.name,
+        url=_x_search_url(query, source.search_mode),
+        source=source.name,
+        score=source.priority,
+        tags=_merge_tags(source.tags, ("media-search",)),
+        summary=source.summary
+        or "Opens X search for high-engagement Japanese tweets that contain media.",
+        preview_title=query,
+        preview_description="X search lane for individual media tweets with engagement filters.",
+        status="hit-search",
+    )
+
+
+def _format_hit_query(query: str) -> str:
+    today = datetime.now(UTC).date()
+    values = {
+        "today": today.isoformat(),
+        "since_1d": (today - timedelta(days=1)).isoformat(),
+        "since_2d": (today - timedelta(days=2)).isoformat(),
+        "since_7d": (today - timedelta(days=7)).isoformat(),
+    }
+    return query.format(**values).strip()
+
+
+def _x_search_url(query: str, mode: str = "top") -> str:
+    search_mode = mode if mode in {"top", "live"} else "top"
+    return f"https://twitter.com/search?{urlencode({'q': query, 'src': 'typed_query', 'f': search_mode})}"
+
+
 def _youtube_trends_leads(source: Source, limit: int) -> list[Lead]:
     if not source.url:
         raise ValueError(f"{source.name} is missing url")
@@ -204,6 +241,8 @@ def _merge_tags(*groups: tuple[str, ...]) -> tuple[str, ...]:
 
 
 def _status_rank(status: str) -> int:
+    if status == "hit-search":
+        return 4
     if status == "media-search":
         return 3
     if status == "ok":

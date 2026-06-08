@@ -16,6 +16,8 @@ def load_config(path: str | Path) -> tuple[str, list[Source]]:
             Source(
                 name=str(raw["name"]),
                 kind=str(raw["kind"]),
+                query=str(raw.get("query", "")),
+                search_mode=str(raw.get("search_mode", "top")),
                 url=raw.get("url"),
                 url_template=raw.get("url_template"),
                 link_patterns=tuple(raw.get("link_patterns", [])),

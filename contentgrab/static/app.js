@@ -71,7 +71,7 @@ function renderLeads() {
     const previewMatch = !state.previewOnly || hasPreview(lead);
     return statusMatch && sourceMatch && previewMatch;
   });
-  els.leadCount.textContent = `${state.leads.length} trending leads - ${leads.length} shown`;
+  els.leadCount.textContent = `${state.leads.length} media leads - ${leads.length} shown`;
   els.leads.innerHTML = leads.map(renderLeadCard).join("");
   renderSourceFilter();
 }
@@ -80,7 +80,8 @@ function renderLeadCard(lead) {
   const index = state.leads.indexOf(lead) + 1;
   const tags = lead.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   const badgeClass = lead.status === "error" ? "badge error" : "badge";
-  const actionText = lead.status === "media-search" ? "Open media search" : "Open";
+  const actionText =
+    lead.status === "hit-search" ? "Open hit tweets" : lead.status === "media-search" ? "Open media search" : "Open";
   const preview = renderPreview(lead);
   const media = lead.media_urls
     .filter((url) => /\.(jpe?g|png|gif|webp)$/i.test(url))
@@ -129,9 +130,10 @@ function renderPreview(lead) {
   }
   const eyebrow =
     lead.status === "media-search" ? "Trend media search" : lead.media_urls.length ? "Preview available" : "Source preview";
+  const label = lead.status === "hit-search" ? "Hit tweet search" : eyebrow;
   return `
     <div class="preview-box">
-      <span>${eyebrow}</span>
+      <span>${label}</span>
       ${lead.preview_title ? `<strong>${escapeHtml(lead.preview_title)}</strong>` : ""}
       ${lead.preview_description ? `<p>${escapeHtml(lead.preview_description)}</p>` : ""}
     </div>
@@ -155,7 +157,7 @@ function renderShortlist() {
 
 async function collect(event) {
   event.preventDefault();
-  setStatus("Collecting current trends and media leads...");
+  setStatus("Collecting hit tweet and media leads...");
   els.collectForm.querySelector("button").disabled = true;
   try {
     const payload = await requestJson("/api/collect", {
@@ -170,7 +172,7 @@ async function collect(event) {
     state.sourceFilter = "all";
     renderLeads();
     renderShortlist();
-    setStatus("Trending media collection complete.");
+    setStatus("Hit tweet collection complete.");
   } catch (error) {
     setStatus(error.message);
   } finally {

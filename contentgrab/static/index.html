@@ -13,18 +13,18 @@
           <div class="mark">CG</div>
           <div>
             <h1>contentgrab</h1>
-            <p>Trending Japanese social media with media</p>
+            <p>Japanese hit tweets and media leads</p>
           </div>
         </div>
 
         <form id="collect-form" class="form-stack">
           <div class="mode-card">
-            <strong>Trend-first mode</strong>
-            <p>Collects current Japan X trend terms and opens media-filtered social searches. No keyword prompt.</p>
+            <strong>Hit tweet mode</strong>
+            <p>Opens X search lanes for high-engagement Japanese tweets that contain images or video.</p>
           </div>
           <div class="inline-fields">
             <label>
-              Trends
+              Extra source limit
               <input id="limit" type="number" min="1" max="50" value="12">
             </label>
             <label>
@@ -32,7 +32,7 @@
               <input id="min-score" type="number" min="0" value="1">
             </label>
           </div>
-          <button class="primary" type="submit">Collect trending media</button>
+          <button class="primary" type="submit">Collect hit tweets</button>
         </form>
 
         <div class="source-box">
@@ -49,7 +49,8 @@
           </div>
           <div class="filters">
             <button class="chip is-active" type="button" data-filter="all">All</button>
-            <button class="chip" type="button" data-filter="media-search">X media</button>
+            <button class="chip" type="button" data-filter="hit-search">Hit tweets</button>
+            <button class="chip" type="button" data-filter="media-search">Trend media</button>
             <button class="chip" type="button" data-filter="ok">Fetched media</button>
             <button class="chip" type="button" data-filter="manual">Manual</button>
             <button class="chip" type="button" data-filter="error">Source notes</button>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,21 +12,21 @@
         <h1>contentgrab</h1>
 
         <form id="collect-form" class="collect-bar">
-          <button class="primary" type="submit">Collect</button>
+          <button class="primary" type="submit">収集</button>
           <input id="limit" type="hidden" value="12">
           <input id="min-score" type="hidden" value="1">
         </form>
       </header>
 
-      <section class="lead-panel" aria-label="Collected leads">
+      <section class="lead-panel" aria-label="収集した候補">
         <div class="review-bar">
-          <p id="lead-count">No links yet</p>
-          <p id="shortlist-count">0 selected</p>
-          <button id="clear-shortlist" class="secondary selection-action" type="button">Clear</button>
+          <p id="lead-count">まだ写真はありません</p>
+          <p id="shortlist-count">選択 0件</p>
+          <button id="clear-shortlist" class="secondary selection-action" type="button">クリア</button>
         </div>
 
         <div id="status" class="status" role="status"></div>
-        <div id="searches" class="search-grid" aria-label="Hit searches"></div>
+        <div id="searches" class="search-grid" aria-label="ヒット投稿検索"></div>
         <div id="leads" class="lead-grid"></div>
       </section>
     </main>

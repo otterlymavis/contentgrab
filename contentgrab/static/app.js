@@ -45,8 +45,8 @@ function renderLeads() {
     .map((lead, index) => ({ lead, index }))
     .filter((item) => imageUrls(item.lead).length)
     .filter(uniqueImageItem());
-  els.leadCount.textContent = visibleLeads.length ? `${visibleLeads.length} photos` : "No photos yet";
-  els.shortlistCount.textContent = `${state.shortlist.length} selected`;
+  els.leadCount.textContent = visibleLeads.length ? `写真 ${visibleLeads.length}件` : "まだ写真はありません";
+  els.shortlistCount.textContent = `選択 ${state.shortlist.length}件`;
   document.querySelectorAll(".selection-action").forEach((element) => {
     element.hidden = state.shortlist.length === 0;
   });
@@ -79,12 +79,16 @@ function dedupeByUrl(leads) {
 }
 
 function searchLabel(lead) {
-  return lead.title
-    .replace(/^X\s+/, "X ")
-    .replace(/\s+Photos?$/i, "")
-    .replace(/\s+Manual$/i, "")
-    .replace(/\s+Source Hits$/i, "")
-    .trim();
+  const labels = {
+    "X Entertainment Hit Photos": "X エンタメ ヒット",
+    "X Fresh Hit Photos": "X 新着ヒット",
+    "X Film Drama Hit Photos": "X 映画・ドラマ",
+    "X Celebrity Idol Hit Photos": "X 芸能人・アイドル",
+    "Yahoo Realtime Entertainment Manual": "Yahooリアルタイム",
+    "TikTok Japan Entertainment Manual": "TikTok 日本",
+    "X Entertainment Sources Manual": "X エンタメ検索",
+  };
+  return labels[lead.title] || lead.title;
 }
 
 function uniqueImageItem() {
@@ -113,9 +117,9 @@ function renderLeadCard(lead, index) {
         <a class="source-link" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(compactUrl(lead.url))}</a>
         <div class="card-actions">
           <button class="${selected ? "primary" : "secondary"}" type="button" data-toggle="${index}">
-            ${selected ? "Selected" : "Select"}
+            ${selected ? "選択中" : "選択"}
           </button>
-          <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
+          <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">開く</a>
         </div>
       </div>
     </article>
@@ -158,7 +162,7 @@ function isSelected(lead) {
 
 async function collect(event) {
   event.preventDefault();
-  setStatus("Collecting...");
+  setStatus("収集中...");
   els.collectForm.querySelector("button").disabled = true;
   try {
     const payload = await requestJson("/api/collect", {

@@ -42,6 +42,18 @@ Create a shortlist by source tag and score:
 .\.venv\Scripts\python.exe -m contentgrab select --input leads.json --tag x --tag yahoo --min-score 6
 ```
 
+## Local app
+
+Run the review dashboard:
+
+```powershell
+.\.venv\Scripts\python.exe -m contentgrab.webapp --host 127.0.0.1 --port 8765
+```
+
+Open [http://127.0.0.1:8765](http://127.0.0.1:8765).
+
+The app lets you collect leads, filter usable results versus source notes, add individual leads to a shortlist, build a shortlist by indexes/tags/score, and open the exported Markdown shortlist.
+
 ## Example sources
 
 The example config includes:

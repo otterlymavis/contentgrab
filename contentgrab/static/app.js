@@ -81,7 +81,7 @@ function renderLeadCard(lead) {
   const tags = lead.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   const badgeClass = lead.status === "error" ? "badge error" : "badge";
   const actionText =
-    lead.status === "hit-search" ? "Open hit tweets" : lead.status === "media-search" ? "Open media search" : "Open";
+    lead.status === "hit-search" ? "Open X posts" : lead.status === "media-search" ? "Open media search" : "Open";
   const preview = renderPreview(lead);
   const media = lead.media_urls
     .filter((url) => /\.(jpe?g|png|gif|webp)$/i.test(url))
@@ -130,7 +130,7 @@ function renderPreview(lead) {
   }
   const eyebrow =
     lead.status === "media-search" ? "Trend media search" : lead.media_urls.length ? "Preview available" : "Source preview";
-  const label = lead.status === "hit-search" ? "Hit tweet search" : eyebrow;
+  const label = lead.status === "hit-search" ? "X hit post search" : eyebrow;
   return `
     <div class="preview-box">
       <span>${label}</span>
@@ -157,7 +157,7 @@ function renderShortlist() {
 
 async function collect(event) {
   event.preventDefault();
-  setStatus("Collecting hit tweet and media leads...");
+  setStatus("Collecting Japanese entertainment hit posts...");
   els.collectForm.querySelector("button").disabled = true;
   try {
     const payload = await requestJson("/api/collect", {
@@ -172,7 +172,7 @@ async function collect(event) {
     state.sourceFilter = "all";
     renderLeads();
     renderShortlist();
-    setStatus("Hit tweet collection complete.");
+    setStatus("Entertainment hit post collection complete.");
   } catch (error) {
     setStatus(error.message);
   } finally {

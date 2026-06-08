@@ -102,8 +102,9 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
         display_title = title or urlparse(url).path.strip("/") or url
         article_media_urls = tuple(parser.link_media_urls.get(url, ()))
         linked_media_urls = tuple(link for _, link in parser.links if link == url and _is_media_url(link))
+        detail_media_urls = _collect_detail_media_urls(url)
         fallback_media_urls = () if source.require_media else page_media_urls
-        media_urls = tuple(dict.fromkeys(article_media_urls + linked_media_urls + fallback_media_urls))
+        media_urls = tuple(dict.fromkeys(article_media_urls + linked_media_urls + detail_media_urls + fallback_media_urls))
         if source.require_media and not media_urls:
             continue
         media_key = _media_key(media_urls[0]) if media_urls else ""
@@ -116,9 +117,9 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
                 title=display_title[:180],
                 url=url,
                 source=source.name,
-                score=score_text(display_title + " " + url) + source.priority + min(len(media_urls), 5) * 3,
+                score=score_text(display_title + " " + url) + source.priority + min(len(media_urls), 8) * 3,
                 tags=source.tags,
-                media_urls=media_urls[:5],
+                media_urls=media_urls[:12],
                 summary=source.summary,
                 preview_title=display_title[:180],
                 preview_description="Fetched source with photos detected.",
@@ -126,6 +127,15 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
         )
 
     return leads
+
+
+def _collect_detail_media_urls(url: str) -> tuple[str, ...]:
+    try:
+        parser = LinkParser(url)
+        parser.feed(fetch_html(url, timeout=10))
+    except Exception:
+        return ()
+    return tuple(dict.fromkeys(parser.media_urls))
 
 
 def _is_candidate(url: str, patterns: tuple[str, ...]) -> bool:

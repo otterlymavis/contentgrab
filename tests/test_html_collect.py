@@ -1,6 +1,8 @@
 import unittest
+from unittest.mock import patch
 
-from contentgrab.html_collect import LinkParser
+from contentgrab.html_collect import LinkParser, collect_html_source
+from contentgrab.models import Source
 
 
 class LinkParserTests(unittest.TestCase):
@@ -28,3 +30,27 @@ class LinkParserTests(unittest.TestCase):
             parser.link_media_urls,
             {"https://example.jp/topics/123": ["https://example.jp/media/still.webp"]},
         )
+
+    def test_collect_html_source_keeps_article_photo_set(self) -> None:
+        list_html = '<a href="/topics/123"><img src="/media/thumb.jpg">Story</a>'
+        detail_html = "".join(f'<img src="/media/{index}.jpg">' for index in range(14))
+        source = Source(
+            name="Photos",
+            kind="html",
+            url="https://example.jp/board/",
+            link_patterns=("/topics/",),
+            require_media=True,
+        )
+
+        def fake_fetch(url: str, timeout: int = 20) -> str:
+            if url == "https://example.jp/topics/123":
+                return detail_html
+            return list_html
+
+        with patch("contentgrab.html_collect.fetch_html", side_effect=fake_fetch):
+            leads = collect_html_source(source, limit=1)
+
+        self.assertEqual(len(leads), 1)
+        self.assertEqual(len(leads[0].media_urls), 12)
+        self.assertEqual(leads[0].media_urls[0], "https://example.jp/media/thumb.jpg")
+        self.assertEqual(leads[0].media_urls[1], "https://example.jp/media/0.jpg")

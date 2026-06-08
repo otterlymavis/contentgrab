@@ -139,12 +139,23 @@ p {
   min-width: 0;
 }
 
-.content-tile img {
+.article-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.article-photos img {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 6px;
+}
+
+.article-photos img:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
 }
 
 .content-tile {
@@ -203,5 +214,14 @@ p {
 
   .review-bar {
     display: grid;
+  }
+
+  .article-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .article-photos img:first-child {
+    grid-column: auto;
+    grid-row: auto;
   }
 }

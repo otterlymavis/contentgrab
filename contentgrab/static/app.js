@@ -65,12 +65,14 @@ function uniqueImageItem() {
 
 function renderLeadCard(lead, index) {
   const selected = isSelected(lead);
-  const imageUrl = imageUrls(lead)[0];
+  const images = imageUrls(lead)
+    .map((url) => `<img src="${escapeHtml(url)}" alt="">`)
+    .join("");
   return `
     <article class="lead-card ${escapeHtml(lead.status)} ${selected ? "selected" : ""}">
       <div class="content-card">
         <a class="content-tile" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(lead.title)}">
-          <img src="${escapeHtml(imageUrl)}" alt="">
+          <div class="article-photos">${images}</div>
         </a>
         <a class="source-link" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(compactUrl(lead.url))}</a>
         <div class="card-actions">

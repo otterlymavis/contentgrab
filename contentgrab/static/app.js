@@ -27,7 +27,7 @@ async function requestJson(url, options = {}) {
 }
 
 function setStatus(message) {
-  els.status.textContent = message;
+  els.status.textContent = message || "";
 }
 
 function escapeHtml(value) {
@@ -55,16 +55,17 @@ function renderLeadCard(lead) {
     .join("");
   return `
     <article class="lead-card ${escapeHtml(lead.status)} ${selected ? "selected" : ""}">
-      <a class="lead-title" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
-      <a class="plain-url" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(compactUrl(lead.url))}</a>
+      <div class="lead-row">
+        <a class="lead-title" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
+        <div class="card-actions">
+          <button class="${selected ? "primary" : "secondary"}" type="button" data-toggle="${index}">
+            ${selected ? "✓" : "+"}
+          </button>
+          <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
+        </div>
+      </div>
       ${preview}
       ${media ? `<div class="media-strip">${media}</div>` : ""}
-      <div class="card-actions">
-        <button class="${selected ? "primary" : "secondary"}" type="button" data-toggle="${index}">
-          ${selected ? "Selected" : "Select"}
-        </button>
-        <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
-      </div>
     </article>
   `;
 }
@@ -88,18 +89,9 @@ function renderPreview(lead) {
   `;
 }
 
-function compactUrl(value) {
-  try {
-    const url = new URL(value);
-    return `${url.hostname}${url.pathname === "/" ? "" : url.pathname}`;
-  } catch {
-    return value;
-  }
-}
-
 async function collect(event) {
   event.preventDefault();
-  setStatus("Collecting Japanese entertainment photo hit posts...");
+  setStatus("Collecting...");
   els.collectForm.querySelector("button").disabled = true;
   try {
     const payload = await requestJson("/api/collect", {
@@ -112,7 +104,7 @@ async function collect(event) {
     state.leads = payload.leads;
     state.shortlist = payload.shortlist;
     renderLeads();
-    setStatus("Photo hit post collection complete.");
+    setStatus("");
   } catch (error) {
     setStatus(error.message);
   } finally {

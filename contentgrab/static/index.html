@@ -9,12 +9,10 @@
   <body>
     <main class="app-shell">
       <header class="topbar">
-        <div class="brand">
-          <h1>contentgrab</h1>
-        </div>
+        <h1>contentgrab</h1>
 
         <form id="collect-form" class="collect-bar">
-          <button class="primary" type="submit">Collect hit posts</button>
+          <button class="primary" type="submit">Collect</button>
           <input id="limit" type="hidden" value="12">
           <input id="min-score" type="hidden" value="1">
         </form>
@@ -24,7 +22,7 @@
         <div class="review-bar">
           <p id="lead-count">No links yet</p>
           <p id="shortlist-count">0 selected</p>
-          <a class="secondary" href="/api/export/shortlist.md" target="_blank" rel="noreferrer">Markdown</a>
+          <a class="secondary" href="/api/export/shortlist.md" target="_blank" rel="noreferrer">Export</a>
           <button id="clear-shortlist" class="secondary" type="button">Clear</button>
         </div>
 

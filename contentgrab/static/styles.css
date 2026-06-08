@@ -3,7 +3,6 @@
   --ink: #202124;
   --muted: #747b83;
   --line: #e5e7eb;
-  --panel: #ffffff;
   --surface: #fafafa;
   --accent: #111827;
   --accent-soft: #f1f5f9;
@@ -28,10 +27,10 @@ input {
 
 .app-shell {
   display: grid;
-  gap: 16px;
-  width: min(760px, 100%);
+  gap: 12px;
+  width: min(700px, 100%);
   margin: 0 auto;
-  padding: 20px;
+  padding: 18px;
 }
 
 .topbar {
@@ -39,12 +38,8 @@ input {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-bottom: 14px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
-}
-
-.brand {
-  min-width: 0;
 }
 
 h1,
@@ -72,9 +67,9 @@ p {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  min-height: 38px;
-  padding: 8px 13px;
+  border-radius: 6px;
+  min-height: 34px;
+  padding: 6px 10px;
   cursor: pointer;
   font-weight: 720;
   text-decoration: none;
@@ -94,14 +89,14 @@ p {
 .lead-panel {
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: 8px;
 }
 
 .review-bar {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-bottom: 8px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -110,7 +105,7 @@ p {
 }
 
 .status {
-  min-height: 18px;
+  min-height: 0;
   color: var(--muted);
   font-size: 13px;
 }
@@ -122,8 +117,8 @@ p {
 
 .lead-card {
   display: grid;
-  gap: 8px;
-  padding: 12px 0;
+  gap: 6px;
+  padding: 10px 0;
   border-top: 1px solid var(--line);
   background: transparent;
 }
@@ -134,12 +129,18 @@ p {
 }
 
 .lead-card.selected {
-  padding-left: 10px;
-  border-left: 3px solid var(--ink);
+  padding-left: 8px;
+  border-left: 2px solid var(--ink);
 }
 
-.lead-title,
-.plain-url {
+.lead-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: start;
+}
+
+.lead-title {
   overflow-wrap: anywhere;
 }
 
@@ -155,15 +156,9 @@ p {
   text-decoration: underline;
 }
 
-.plain-url {
-  color: var(--muted);
-  font-size: 13px;
-  text-decoration: none;
-}
-
 .preview-box {
   display: grid;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--accent-soft);
@@ -197,17 +192,20 @@ p {
 .review-bar {
   display: flex;
   flex-wrap: nowrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .card-actions .primary,
-.card-actions .secondary {
-  flex: 1;
+.card-actions .secondary,
+.card-actions a {
+  min-width: 42px;
+  min-height: 30px;
+  padding: 5px 8px;
 }
 
 @media (max-width: 860px) {
   .app-shell {
-    padding: 18px;
+    padding: 14px;
   }
 
   .topbar {
@@ -223,7 +221,7 @@ p {
 @media (max-width: 520px) {
   .app-shell {
     padding: 12px;
-    gap: 18px;
+    gap: 12px;
   }
 
   .media-strip {
@@ -237,5 +235,9 @@ p {
 
   .review-bar {
     display: grid;
+  }
+
+  .lead-row {
+    grid-template-columns: 1fr;
   }
 }

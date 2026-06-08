@@ -55,6 +55,18 @@
             <button class="chip" type="button" data-filter="error">Source notes</button>
           </div>
         </div>
+        <div class="review-controls">
+          <label>
+            Source
+            <select id="source-filter">
+              <option value="all">All sources</option>
+            </select>
+          </label>
+          <label class="check-row compact-check">
+            <input id="preview-only" type="checkbox">
+            Preview only
+          </label>
+        </div>
         <div id="status" class="status" role="status"></div>
         <div id="leads" class="lead-grid"></div>
       </section>
@@ -65,7 +77,10 @@
             <h2>Shortlist</h2>
             <p id="shortlist-count">0 saved</p>
           </div>
-          <a class="secondary" href="/api/export/shortlist.md" target="_blank" rel="noreferrer">Markdown</a>
+          <div class="shortlist-actions">
+            <a class="secondary" href="/api/export/shortlist.md" target="_blank" rel="noreferrer">Markdown</a>
+            <button id="clear-shortlist" class="secondary" type="button">Clear</button>
+          </div>
         </div>
 
         <form id="shortlist-form" class="form-stack compact-form">

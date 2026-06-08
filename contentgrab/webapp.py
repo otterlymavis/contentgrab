@@ -120,6 +120,10 @@ class ContentGrabHandler(BaseHTTPRequestHandler):
             write_shortlist(selected)
             self._send_json({"shortlist": leads_to_payload(selected)})
             return
+        if parsed.path == "/api/shortlist/clear":
+            write_shortlist([])
+            self._send_json({"shortlist": []})
+            return
         self.send_error(HTTPStatus.NOT_FOUND)
 
     def log_message(self, format: str, *args: object) -> None:

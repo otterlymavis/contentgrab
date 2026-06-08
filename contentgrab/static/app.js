@@ -2,6 +2,8 @@ const state = {
   leads: [],
   shortlist: [],
   filter: "all",
+  sourceFilter: "all",
+  previewOnly: false,
 };
 
 const els = {
@@ -13,6 +15,9 @@ const els = {
   indexes: document.querySelector("#indexes"),
   tags: document.querySelector("#tags"),
   includeErrors: document.querySelector("#include-errors"),
+  sourceFilter: document.querySelector("#source-filter"),
+  previewOnly: document.querySelector("#preview-only"),
+  clearShortlist: document.querySelector("#clear-shortlist"),
   leads: document.querySelector("#leads"),
   shortlist: document.querySelector("#shortlist"),
   leadCount: document.querySelector("#lead-count"),
@@ -60,9 +65,15 @@ function renderSources(sources) {
 }
 
 function renderLeads() {
-  const leads = state.leads.filter((lead) => state.filter === "all" || lead.status === state.filter);
+  const leads = state.leads.filter((lead) => {
+    const statusMatch = state.filter === "all" || lead.status === state.filter;
+    const sourceMatch = state.sourceFilter === "all" || lead.source === state.sourceFilter;
+    const previewMatch = !state.previewOnly || hasPreview(lead);
+    return statusMatch && sourceMatch && previewMatch;
+  });
   els.leadCount.textContent = `${state.leads.length} trending leads - ${leads.length} shown`;
   els.leads.innerHTML = leads.map(renderLeadCard).join("");
+  renderSourceFilter();
 }
 
 function renderLeadCard(lead) {
@@ -95,6 +106,21 @@ function renderLeadCard(lead) {
       </div>
     </article>
   `;
+}
+
+function hasPreview(lead) {
+  return Boolean(lead.preview_title || lead.preview_description || lead.media_urls.length || lead.status === "media-search");
+}
+
+function renderSourceFilter() {
+  const sources = [...new Set(state.leads.map((lead) => lead.source))].sort();
+  const current = sources.includes(state.sourceFilter) ? state.sourceFilter : "all";
+  state.sourceFilter = current;
+  els.sourceFilter.innerHTML = [
+    '<option value="all">All sources</option>',
+    ...sources.map((source) => `<option value="${escapeHtml(source)}">${escapeHtml(source)}</option>`),
+  ].join("");
+  els.sourceFilter.value = current;
 }
 
 function renderPreview(lead) {
@@ -141,6 +167,7 @@ async function collect(event) {
     });
     state.leads = payload.leads;
     state.shortlist = payload.shortlist;
+    state.sourceFilter = "all";
     renderLeads();
     renderShortlist();
     setStatus("Trending media collection complete.");
@@ -188,6 +215,15 @@ async function removeLead(url) {
   renderShortlist();
 }
 
+async function clearShortlist() {
+  const payload = await requestJson("/api/shortlist/clear", {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+  state.shortlist = payload.shortlist;
+  renderShortlist();
+}
+
 async function init() {
   const config = await requestJson("/api/config");
   renderSources(config.sources);
@@ -200,6 +236,15 @@ async function init() {
 
 els.collectForm.addEventListener("submit", collect);
 els.shortlistForm.addEventListener("submit", buildShortlist);
+els.sourceFilter.addEventListener("change", () => {
+  state.sourceFilter = els.sourceFilter.value;
+  renderLeads();
+});
+els.previewOnly.addEventListener("change", () => {
+  state.previewOnly = els.previewOnly.checked;
+  renderLeads();
+});
+els.clearShortlist.addEventListener("click", clearShortlist);
 els.leads.addEventListener("click", (event) => {
   const index = event.target.dataset.add;
   if (index) {

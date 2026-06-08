@@ -103,7 +103,8 @@ label {
 }
 
 textarea,
-input {
+input,
+select {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -113,7 +114,8 @@ input {
 }
 
 textarea:focus,
-input:focus {
+input:focus,
+select:focus {
   border-color: var(--accent);
   outline: 3px solid rgba(15, 123, 108, 0.16);
 }
@@ -220,6 +222,19 @@ input:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.review-controls {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) auto;
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.compact-check {
+  min-height: 40px;
+  padding-bottom: 2px;
 }
 
 .status {
@@ -339,6 +354,11 @@ input:focus {
   border: 1px solid var(--line);
 }
 
+.media-strip a:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
 .compact-form {
   margin-bottom: 20px;
 }
@@ -357,6 +377,13 @@ input:focus {
 .shortlist {
   display: grid;
   gap: 10px;
+}
+
+.shortlist-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .shortlist-card {
@@ -402,7 +429,8 @@ input:focus {
   }
 
   .toolbar,
-  .inline-fields {
+  .inline-fields,
+  .review-controls {
     grid-template-columns: 1fr;
     display: grid;
   }

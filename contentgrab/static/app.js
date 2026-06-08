@@ -55,7 +55,7 @@ function renderLeads() {
 }
 
 function renderSearchButtons() {
-  const searchLeads = dedupeByUrl([...state.searchButtons, ...state.leads.filter(isSearchLead)]);
+  const searchLeads = dedupeByUrl(state.searchButtons);
   els.searches.innerHTML = searchLeads
     .map(
       (lead) => `
@@ -76,15 +76,6 @@ function dedupeByUrl(leads) {
     seen.add(lead.url);
     return true;
   });
-}
-
-function isSearchLead(lead) {
-  return (
-    lead.status === "hit-search" ||
-    lead.status === "media-search" ||
-    lead.status === "manual" ||
-    lead.tags.includes("manual")
-  );
 }
 
 function searchLabel(lead) {

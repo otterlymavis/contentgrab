@@ -41,16 +41,6 @@ require_media = true
 summary = "Music and idol photo articles from Music Natalie."
 
 [[sources]]
-name = "Comic Natalie Photos"
-kind = "html"
-url = "https://natalie.mu/comic/news"
-link_patterns = ["/comic/news/"]
-tags = ["natalie", "japan", "anime", "manga", "photos"]
-priority = 42
-require_media = true
-summary = "Anime and manga photo articles from Comic Natalie."
-
-[[sources]]
 name = "X Entertainment Hit Photos"
 kind = "x_hit_media_search"
 query = "(from:modelpress OR from:oricon OR from:eiga_natalie OR from:thetvjp OR from:cinematoday) filter:images min_faves:100 -filter:replies"
@@ -85,15 +75,6 @@ search_mode = "top"
 tags = ["x", "twitter", "japan", "celebrities", "idols", "hit-tweets", "photos"]
 priority = 32
 summary = "Celebrity, idol, and music photo posts getting traction on X."
-
-[[sources]]
-name = "X Anime Voice Actor Hit Photos"
-kind = "x_hit_media_search"
-query = "(from:animeanime_jp OR from:animatetimes OR from:comic_natalie OR from:dengekionline OR from:famitsu) filter:images min_faves:50 -filter:replies"
-search_mode = "top"
-tags = ["x", "twitter", "japan", "anime", "voice-actors", "hit-tweets", "photos"]
-priority = 31
-summary = "Anime, manga, game, and voice-actor photo posts getting traction on X."
 
 [[sources]]
 name = "Yahoo Realtime Entertainment Manual"

@@ -10,7 +10,7 @@ The tool does not download images. It collects links to posts, pages, and obviou
 - Collects links from HTML pages such as forums, rankings, and news pages.
 - Opens X/Twitter search lanes for high-engagement Japanese entertainment posts that contain images.
 - Adds manual Yahoo realtime and TikTok checks.
-- Focuses on film, TV series, drama, celebrities, actors, idols, anime, voice actors, and entertainment shows.
+- Focuses on film, TV series, drama, celebrities, actors, idols, music, and entertainment shows.
 - Adds manual trend URLs for sources that are not safe or practical to scrape directly.
 - Scores leads with Japanese entertainment keywords.
 - Exports Markdown for daily review and JSON for automation.

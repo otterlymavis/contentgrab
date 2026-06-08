@@ -9,7 +9,6 @@ const els = {
   minScore: document.querySelector("#min-score"),
   clearShortlist: document.querySelector("#clear-shortlist"),
   leads: document.querySelector("#leads"),
-  shortlist: document.querySelector("#shortlist"),
   leadCount: document.querySelector("#lead-count"),
   shortlistCount: document.querySelector("#shortlist-count"),
   status: document.querySelector("#status"),
@@ -40,7 +39,8 @@ function escapeHtml(value) {
 }
 
 function renderLeads() {
-  els.leadCount.textContent = `${state.leads.length} links - ${state.shortlist.length} selected`;
+  els.leadCount.textContent = state.leads.length ? `${state.leads.length} links` : "No links yet";
+  els.shortlistCount.textContent = `${state.shortlist.length} selected`;
   els.leads.innerHTML = state.leads.map(renderLeadCard).join("");
 }
 
@@ -97,23 +97,6 @@ function compactUrl(value) {
   }
 }
 
-function renderShortlist() {
-  els.shortlistCount.textContent = `${state.shortlist.length} selected`;
-  els.shortlist.innerHTML = state.shortlist
-    .map(
-      (lead) => `
-        <article class="shortlist-card">
-          <a href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">${escapeHtml(lead.title)}</a>
-          <div class="shortlist-card-actions">
-            <a class="secondary" href="${escapeHtml(lead.url)}" target="_blank" rel="noreferrer">Open</a>
-            <button class="secondary" type="button" data-remove="${escapeHtml(lead.url)}">Remove</button>
-          </div>
-        </article>
-      `
-    )
-    .join("");
-}
-
 async function collect(event) {
   event.preventDefault();
   setStatus("Collecting Japanese entertainment photo hit posts...");
@@ -129,7 +112,6 @@ async function collect(event) {
     state.leads = payload.leads;
     state.shortlist = payload.shortlist;
     renderLeads();
-    renderShortlist();
     setStatus("Photo hit post collection complete.");
   } catch (error) {
     setStatus(error.message);
@@ -145,7 +127,6 @@ async function addLead(index) {
   });
   state.shortlist = payload.shortlist;
   renderLeads();
-  renderShortlist();
 }
 
 async function removeLead(url) {
@@ -155,7 +136,6 @@ async function removeLead(url) {
   });
   state.shortlist = payload.shortlist;
   renderLeads();
-  renderShortlist();
 }
 
 async function toggleLead(index) {
@@ -177,7 +157,6 @@ async function clearShortlist() {
   });
   state.shortlist = payload.shortlist;
   renderLeads();
-  renderShortlist();
 }
 
 async function init() {
@@ -185,7 +164,6 @@ async function init() {
   state.leads = current.leads;
   state.shortlist = current.shortlist;
   renderLeads();
-  renderShortlist();
 }
 
 els.collectForm.addEventListener("submit", collect);
@@ -194,12 +172,6 @@ els.leads.addEventListener("click", (event) => {
   const index = event.target.dataset.toggle;
   if (index) {
     toggleLead(Number(index));
-  }
-});
-els.shortlist.addEventListener("click", (event) => {
-  const url = event.target.dataset.remove;
-  if (url) {
-    removeLead(url);
   }
 });
 init().catch((error) => setStatus(error.message));

@@ -10,11 +10,7 @@
     <main class="app-shell">
       <header class="topbar">
         <div class="brand">
-          <div class="mark">CG</div>
-          <div>
-            <h1>contentgrab</h1>
-            <p>Japanese entertainment hit posts with photos</p>
-          </div>
+          <h1>contentgrab</h1>
         </div>
 
         <form id="collect-form" class="collect-bar">
@@ -25,31 +21,16 @@
       </header>
 
       <section class="lead-panel" aria-label="Collected leads">
-        <div class="section-head">
-          <div>
-            <h2>Entertainment Hit Posts</h2>
-            <p id="lead-count">No leads collected yet</p>
-          </div>
+        <div class="review-bar">
+          <p id="lead-count">No links yet</p>
+          <p id="shortlist-count">0 selected</p>
+          <a class="secondary" href="/api/export/shortlist.md" target="_blank" rel="noreferrer">Markdown</a>
+          <button id="clear-shortlist" class="secondary" type="button">Clear</button>
         </div>
 
         <div id="status" class="status" role="status"></div>
         <div id="leads" class="lead-grid"></div>
       </section>
-
-      <aside class="shortlist-panel" aria-label="Shortlist">
-        <div class="section-head compact">
-          <div>
-            <h2>Shortlist</h2>
-            <p id="shortlist-count">0 saved</p>
-          </div>
-          <div class="shortlist-actions">
-            <a class="secondary" href="/api/export/shortlist.md" target="_blank" rel="noreferrer">Markdown</a>
-            <button id="clear-shortlist" class="secondary" type="button">Clear</button>
-          </div>
-        </div>
-
-        <div id="shortlist" class="shortlist"></div>
-      </aside>
     </main>
     <script src="/static/app.js"></script>
   </body>

@@ -3,37 +3,29 @@ default_query = ""
 [[sources]]
 name = "X Entertainment News Hit Posts"
 kind = "x_hit_media_search"
-query = "(from:modelpress OR from:oricon OR from:eiga_natalie OR from:thetvjp OR from:cinematoday) filter:media min_faves:100 -filter:replies"
+query = "(from:modelpress OR from:oricon OR from:eiga_natalie OR from:thetvjp OR from:cinematoday) filter:images min_faves:100 -filter:replies"
 search_mode = "top"
-tags = ["x", "twitter", "japan", "entertainment", "sources", "hit-tweets"]
+tags = ["x", "twitter", "japan", "entertainment", "sources", "hit-tweets", "photos"]
 priority = 50
-summary = "High-engagement media tweets from Japanese entertainment news accounts."
+summary = "High-engagement photo tweets from Japanese entertainment news accounts."
 
 [[sources]]
 name = "X Fresh Entertainment Source Hits"
 kind = "x_hit_media_search"
-query = "(from:modelpress OR from:oricon OR from:eiga_natalie OR from:thetvjp OR from:cinematoday) filter:media min_faves:30 since:{since_2d} -filter:replies"
+query = "(from:modelpress OR from:oricon OR from:eiga_natalie OR from:thetvjp OR from:cinematoday) filter:images min_faves:30 since:{since_2d} -filter:replies"
 search_mode = "live"
-tags = ["x", "twitter", "japan", "entertainment", "fresh", "sources", "hit-tweets"]
+tags = ["x", "twitter", "japan", "entertainment", "fresh", "sources", "hit-tweets", "photos"]
 priority = 48
-summary = "Recent source-based entertainment media tweets already getting traction."
+summary = "Recent source-based entertainment photo tweets already getting traction."
 
 [[sources]]
-name = "X JP Film Drama Video Hits"
+name = "X JP Film Drama Photo Hits"
 kind = "x_hit_media_search"
-query = "(from:eiga_natalie OR from:cinematoday OR from:eigacom OR from:crank_in_net OR from:realsound_m) filter:media min_faves:50 -filter:replies"
+query = "(from:eiga_natalie OR from:cinematoday OR from:eigacom OR from:crank_in_net OR from:realsound_m) filter:images min_faves:50 -filter:replies"
 search_mode = "top"
-tags = ["x", "twitter", "japan", "film", "drama", "sources", "hit-tweets"]
+tags = ["x", "twitter", "japan", "film", "drama", "sources", "hit-tweets", "photos"]
 priority = 46
-summary = "High-engagement media tweets from Japanese film, drama, and TV sources."
-
-[[sources]]
-name = "Japan YouTube Entertainment Trending"
-kind = "youtube_trends"
-url = "https://youtube.trends24.in/japan"
-tags = ["youtube", "video", "japan", "entertainment", "preview"]
-priority = 30
-summary = "Japan YouTube trending videos with thumbnail previews; useful for entertainment crossover checks."
+summary = "High-engagement photo tweets from Japanese film, drama, and TV sources."
 
 [[sources]]
 name = "Yahoo Realtime Entertainment Manual"

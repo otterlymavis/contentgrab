@@ -64,10 +64,10 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(leads[0].status, "manual")
         self.assertEqual(leads[0].summary, "Manual trend page.")
 
-    def test_x_media_search_url_adds_media_filter(self) -> None:
+    def test_x_media_search_url_adds_image_filter(self) -> None:
         url = _x_media_search_url("#CDTVライブライブ")
 
-        self.assertIn("filter%3Amedia", url)
+        self.assertIn("filter%3Aimages", url)
         self.assertIn("twitter.com/search", url)
 
     def test_twitter_search_term_reads_query_parameter(self) -> None:
@@ -82,9 +82,9 @@ class CollectorTests(unittest.TestCase):
         self.assertGreater(_status_rank("hit-search"), _status_rank("media-search"))
 
     def test_x_search_url_encodes_hit_query(self) -> None:
-        url = _x_search_url("lang:ja filter:media min_faves:1000 -filter:replies", "top")
+        url = _x_search_url("lang:ja filter:images min_faves:1000 -filter:replies", "top")
 
-        self.assertIn("filter%3Amedia", url)
+        self.assertIn("filter%3Aimages", url)
         self.assertIn("min_faves%3A1000", url)
         self.assertIn("f=top", url)
 

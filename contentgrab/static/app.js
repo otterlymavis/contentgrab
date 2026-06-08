@@ -116,7 +116,7 @@ function renderShortlist() {
 
 async function collect(event) {
   event.preventDefault();
-  setStatus("Collecting Japanese entertainment hit posts...");
+  setStatus("Collecting Japanese entertainment photo hit posts...");
   els.collectForm.querySelector("button").disabled = true;
   try {
     const payload = await requestJson("/api/collect", {
@@ -130,7 +130,7 @@ async function collect(event) {
     state.shortlist = payload.shortlist;
     renderLeads();
     renderShortlist();
-    setStatus("Entertainment hit post collection complete.");
+    setStatus("Photo hit post collection complete.");
   } catch (error) {
     setStatus(error.message);
   } finally {

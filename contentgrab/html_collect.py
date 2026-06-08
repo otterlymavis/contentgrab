@@ -7,7 +7,7 @@ from urllib.request import Request, urlopen
 from .models import Lead, Source
 from .scoring import score_text
 
-MEDIA_EXTENSIONS = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".mp4", ".mov", ".m3u8")
+IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".gif", ".webp")
 
 
 class LinkParser(HTMLParser):
@@ -21,7 +21,7 @@ class LinkParser(HTMLParser):
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr_map = dict(attrs)
-        if tag in {"img", "video", "source"}:
+        if tag in {"img", "source"}:
             src = attr_map.get("src") or attr_map.get("data-src")
             if src:
                 media_url = urljoin(self.base_url, src)
@@ -107,7 +107,7 @@ def collect_html_source(source: Source, limit: int) -> list[Lead]:
                 media_urls=media_urls[:5],
                 summary=source.summary,
                 preview_title=display_title[:180],
-                preview_description="Fetched source with media detected.",
+                preview_description="Fetched source with photos detected.",
             )
         )
 
@@ -121,4 +121,4 @@ def _is_candidate(url: str, patterns: tuple[str, ...]) -> bool:
 
 
 def _is_media_url(url: str) -> bool:
-    return urlparse(url).path.lower().endswith(MEDIA_EXTENSIONS)
+    return urlparse(url).path.lower().endswith(IMAGE_EXTENSIONS)

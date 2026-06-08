@@ -58,7 +58,7 @@ def _manual_url_lead(source: Source) -> Lead:
         source=source.name,
         score=source.priority,
         tags=source.tags,
-        summary=source.summary or "Open this source manually to review trending media posts.",
+        summary=source.summary or "Open this source manually to review trending photo posts.",
         status="manual",
     )
 
@@ -94,15 +94,15 @@ def _x_trends_media_leads(source: Source, limit: int) -> list[Lead]:
         rank_score = max(limit - len(leads), 0)
         leads.append(
             Lead(
-                title=f"Trending media on X: {term}",
+                title=f"Trending photos on X: {term}",
                 url=_x_media_search_url(term),
                 source=source.name,
                 score=source.priority + rank_score,
-                tags=_merge_tags(source.tags, ("trend", "media-search")),
+                tags=_merge_tags(source.tags, ("trend", "image-search")),
                 summary=source.summary
-                or "Current Japan X trend. Opens X search filtered to posts that contain media.",
+                or "Current Japan X trend. Opens X search filtered to posts that contain photos.",
                 preview_title=term,
-                preview_description="X media search for a currently trending Japan term.",
+                preview_description="X image search for a currently trending Japan term.",
                 status="media-search",
             )
         )
@@ -118,7 +118,7 @@ def _twitter_search_term(title: str, url: str) -> str:
 
 
 def _x_media_search_url(term: str) -> str:
-    query = urlencode({"q": f"{term} filter:media", "src": "typed_query", "f": "live"})
+    query = urlencode({"q": f"{term} filter:images", "src": "typed_query", "f": "live"})
     return f"https://twitter.com/search?{query}"
 
 
@@ -133,9 +133,9 @@ def _x_hit_media_search_lead(source: Source) -> Lead:
         score=source.priority,
         tags=_merge_tags(source.tags, ("media-search",)),
         summary=source.summary
-        or "Opens X search for high-engagement Japanese tweets that contain media.",
+        or "Opens X search for high-engagement Japanese tweets that contain photos.",
         preview_title=query,
-        preview_description="X search lane for individual media tweets with engagement filters.",
+        preview_description="X search lane for individual photo tweets with engagement filters.",
         status="hit-search",
     )
 

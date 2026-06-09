@@ -127,7 +127,7 @@ function renderLeadCard(lead, index) {
 }
 
 function imageUrls(lead) {
-  return lead.media_urls.filter(isImageUrl);
+  return lead.media_urls.filter((url) => isImageUrl(url) && !isPlaceholderImageUrl(url));
 }
 
 function isImageUrl(value) {
@@ -136,6 +136,13 @@ function isImageUrl(value) {
   } catch {
     return /\.(jpe?g|png|gif|webp)(?:\?|$)/i.test(value);
   }
+}
+
+function isPlaceholderImageUrl(value) {
+  const normalized = value.toLowerCase();
+  return ["blank", "loading", "no-image", "no_image", "noimage", "placeholder"].some((part) =>
+    normalized.includes(part)
+  );
 }
 
 function imageKey(value) {

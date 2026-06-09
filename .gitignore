@@ -12,4 +12,5 @@ shortlist.json
 shortlist.md
 webapp.log
 webapp.err.log
+webapp-*.log
 .env

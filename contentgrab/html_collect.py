@@ -8,6 +8,14 @@ from .models import Lead, Source
 from .scoring import score_text
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".gif", ".webp")
+PLACEHOLDER_IMAGE_PARTS = (
+    "blank",
+    "loading",
+    "no-image",
+    "no_image",
+    "noimage",
+    "placeholder",
+)
 
 
 class LinkParser(HTMLParser):
@@ -145,7 +153,10 @@ def _is_candidate(url: str, patterns: tuple[str, ...]) -> bool:
 
 
 def _is_media_url(url: str) -> bool:
-    return urlparse(url).path.lower().endswith(IMAGE_EXTENSIONS)
+    path = urlparse(url).path.lower()
+    if not path.endswith(IMAGE_EXTENSIONS):
+        return False
+    return not any(part in path for part in PLACEHOLDER_IMAGE_PARTS)
 
 
 def _media_key(url: str) -> str:

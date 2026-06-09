@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from contentgrab.html_collect import LinkParser, collect_html_source
+from contentgrab.html_collect import LinkParser, _is_media_url, collect_html_source
 from contentgrab.models import Source
 
 
@@ -54,3 +54,9 @@ class LinkParserTests(unittest.TestCase):
         self.assertEqual(len(leads[0].media_urls), 12)
         self.assertEqual(leads[0].media_urls[0], "https://example.jp/media/thumb.jpg")
         self.assertEqual(leads[0].media_urls[1], "https://example.jp/media/0.jpg")
+
+    def test_placeholder_images_are_not_media(self) -> None:
+        self.assertFalse(_is_media_url("https://example.jp/common/loading.gif"))
+        self.assertFalse(_is_media_url("https://example.jp/common/goods_blank.png"))
+        self.assertFalse(_is_media_url("https://example.jp/media/noimage.webp"))
+        self.assertTrue(_is_media_url("https://example.jp/media/still.webp"))

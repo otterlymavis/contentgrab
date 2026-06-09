@@ -3,6 +3,7 @@
   --ink: #202124;
   --muted: #747b83;
   --line: #e5e7eb;
+  --panel: #ffffff;
   --surface: #fafafa;
   --accent: #111827;
   --accent-soft: #f1f5f9;
@@ -27,10 +28,10 @@ input {
 
 .app-shell {
   display: grid;
-  gap: 12px;
-  width: min(700px, 100%);
+  gap: 16px;
+  width: min(1120px, 100%);
   margin: 0 auto;
-  padding: 18px;
+  padding: 20px;
 }
 
 .topbar {
@@ -38,7 +39,7 @@ input {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-bottom: 10px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -48,7 +49,7 @@ p {
 }
 
 h1 {
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.2;
 }
 
@@ -68,8 +69,8 @@ p {
   justify-content: center;
   border: 1px solid var(--line);
   border-radius: 6px;
-  min-height: 34px;
-  padding: 6px 10px;
+  min-height: 36px;
+  padding: 7px 12px;
   cursor: pointer;
   font-weight: 720;
   text-decoration: none;
@@ -89,14 +90,14 @@ p {
 .lead-panel {
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: 10px;
 }
 
 .review-bar {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-bottom: 6px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -110,9 +111,16 @@ p {
   font-size: 13px;
 }
 
+.group-label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 760;
+}
+
 .lead-grid {
   display: grid;
-  gap: 0;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
 }
 
 .search-grid {
@@ -122,25 +130,21 @@ p {
 }
 
 .search-button {
-  min-height: 32px;
+  min-height: 34px;
 }
 
 .lead-card {
   display: grid;
-  gap: 8px;
-  padding: 10px 0;
-  border-top: 1px solid var(--line);
-  background: transparent;
-}
-
-.lead-card:first-child {
-  border-top: 0;
-  padding-top: 0;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
 }
 
 .lead-card.selected {
-  padding-left: 8px;
-  border-left: 2px solid var(--ink);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.08);
 }
 
 .content-card {
@@ -166,6 +170,12 @@ p {
 .article-photos img:first-child {
   grid-column: span 2;
   grid-row: span 2;
+}
+
+.article-photos img:only-child {
+  grid-column: 1 / -1;
+  grid-row: auto;
+  aspect-ratio: 16 / 10;
 }
 
 .content-tile {
@@ -204,6 +214,7 @@ p {
 @media (max-width: 860px) {
   .app-shell {
     padding: 14px;
+    width: min(760px, 100%);
   }
 
   .topbar {
@@ -224,6 +235,10 @@ p {
 
   .review-bar {
     display: grid;
+  }
+
+  .lead-grid {
+    grid-template-columns: 1fr;
   }
 
   .article-photos {

@@ -79,10 +79,34 @@ summary = "Celebrity, idol, and music photo posts getting traction on X."
 [[sources]]
 name = "Yahoo Realtime Entertainment Manual"
 kind = "manual_url"
-url = "https://search.yahoo.co.jp/realtime/search?p=%E8%8A%B8%E8%83%BD%20OR%20%E6%98%A0%E7%94%BB%20OR%20%E3%83%89%E3%83%A9%E3%83%9E%20OR%20%E3%82%A2%E3%82%A4%E3%83%89%E3%83%AB%20OR%20%E5%A3%B0%E5%84%AA"
+url = "https://search.yahoo.co.jp/realtime/search?p=%E8%8A%B8%E8%83%BD%20OR%20%E6%98%A0%E7%94%BB%20OR%20%E3%83%89%E3%83%A9%E3%83%9E%20OR%20%E3%83%86%E3%83%AC%E3%83%93%20OR%20%E3%82%A2%E3%82%A4%E3%83%89%E3%83%AB"
 tags = ["yahoo", "realtime", "manual", "entertainment"]
 priority = 12
 summary = "Manual Yahoo realtime lane for Japanese entertainment social posts."
+
+[[sources]]
+name = "Girls Channel Entertainment Manual"
+kind = "manual_url"
+url = "https://girlschannel.net/topics/keyword/%E8%8A%B8%E8%83%BD/"
+tags = ["girlschannel", "manual", "japan", "entertainment"]
+priority = 11
+summary = "Manual Girls Channel lane for active Japanese celebrity and entertainment topics."
+
+[[sources]]
+name = "Girls Channel Drama TV Manual"
+kind = "manual_url"
+url = "https://girlschannel.net/topics/keyword/%E3%83%89%E3%83%A9%E3%83%9E/"
+tags = ["girlschannel", "manual", "japan", "drama", "tv"]
+priority = 10
+summary = "Manual Girls Channel lane for drama and TV discussion topics."
+
+[[sources]]
+name = "5ch Entertainment Board Manual"
+kind = "manual_url"
+url = "https://ikioi-ranking.com/v/5ch/mnewsplus"
+tags = ["5ch", "manual", "japan", "entertainment"]
+priority = 10
+summary = "Manual 5ch Geispo board lane for fast-moving Japanese entertainment threads."
 
 [[sources]]
 name = "TikTok Japan Entertainment Manual"

@@ -125,12 +125,18 @@ p {
 
 .search-grid {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  margin-inline: -2px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  scrollbar-width: thin;
 }
 
 .search-button {
+  flex: 0 0 auto;
   min-height: 34px;
+  white-space: nowrap;
 }
 
 .lead-card {

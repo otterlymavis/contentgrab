@@ -85,6 +85,9 @@ function searchLabel(lead) {
     "X Film Drama Hit Photos": "X 映画・ドラマ",
     "X Celebrity Idol Hit Photos": "X 芸能人・アイドル",
     "Yahoo Realtime Entertainment Manual": "Yahooリアルタイム",
+    "Girls Channel Entertainment Manual": "ガールズちゃんねる 芸能",
+    "Girls Channel Drama TV Manual": "ガールズちゃんねる ドラマ",
+    "5ch Entertainment Board Manual": "5ch 芸スポ",
     "TikTok Japan Entertainment Manual": "TikTok 日本",
     "X Entertainment Sources Manual": "X エンタメ検索",
   };

@@ -1,16 +1,17 @@
 # contentgrab
 
-`contentgrab` is a small local app and CLI for finding Japanese entertainment hit-post leads that point toward social posts with photos. It is designed for creators who want links, context, and light metadata first, then choose what is worth turning into a post.
+`contentgrab` is a small local app and CLI for finding Japanese entertainment hit-post leads and photo articles. It is designed for creators who want a quick visual review surface: see photos first, keep the source links, and select the items worth turning into a post.
 
 The tool does not download images. It collects links to posts, pages, and obvious photo URLs so you can review sources yourself and stay mindful of platform rules and copyright.
 
 ## What it does
 
 - Reads source definitions from a TOML config.
-- Collects links from HTML pages such as forums, rankings, and news pages.
+- Collects links and photo previews from Japanese entertainment news pages.
 - Opens X/Twitter search lanes for high-engagement Japanese entertainment posts that contain images.
-- Adds manual Yahoo realtime and TikTok checks.
+- Adds manual Yahoo realtime, Girls Channel, 5ch, and TikTok checks.
 - Focuses on film, TV series, drama, celebrities, actors, idols, music, and entertainment shows.
+- Avoids anime and voice-actor focused sources in the default config.
 - Adds manual trend URLs for sources that are not safe or practical to scrape directly.
 - Scores leads with Japanese entertainment keywords.
 - Exports Markdown for daily review and JSON for automation.
@@ -55,14 +56,14 @@ Run the review dashboard:
 
 Open [http://127.0.0.1:8765](http://127.0.0.1:8765).
 
-The app lets you collect hit-tweet leads, filter by source/status/preview availability, add individual leads to a shortlist, build a shortlist by indexes/tags/score, clear stale shortlists, and open the exported Markdown shortlist.
+The app shows a simple Japanese photo grid. Use `収集` to refresh candidates, open the source/search buttons for hit-post lanes, select useful cards, and copy selected source links with `コピー`.
 
 ## Example sources
 
 The example config includes:
 
 - Source-based X/Twitter lanes for Japanese entertainment photo posts.
-- Manual Yahoo realtime and TikTok checks.
+- Manual Yahoo realtime, Girls Channel, 5ch, and TikTok checks.
 
 Some platforms change markup often, require login, or prohibit automated scraping. For those, `contentgrab` can generate useful search links instead of pretending it can reliably fetch everything.
 

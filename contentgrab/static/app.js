@@ -8,6 +8,7 @@ const els = {
   collectForm: document.querySelector("#collect-form"),
   limit: document.querySelector("#limit"),
   minScore: document.querySelector("#min-score"),
+  copyShortlist: document.querySelector("#copy-shortlist"),
   clearShortlist: document.querySelector("#clear-shortlist"),
   searches: document.querySelector("#searches"),
   leads: document.querySelector("#leads"),
@@ -232,6 +233,36 @@ async function clearShortlist() {
   renderLeads();
 }
 
+async function copyShortlist() {
+  const links = state.shortlist.map((lead) => lead.url).join("\n");
+  if (!links) {
+    return;
+  }
+  if (await writeClipboard(links)) {
+    setStatus("コピーしました");
+    return;
+  }
+  setStatus("コピーできませんでした");
+}
+
+async function writeClipboard(value) {
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.body.append(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    textarea.remove();
+    return copied;
+  }
+}
+
 async function init() {
   const config = await requestJson("/api/config");
   state.searchButtons = config.search_buttons || [];
@@ -242,6 +273,7 @@ async function init() {
 }
 
 els.collectForm.addEventListener("submit", collect);
+els.copyShortlist.addEventListener("click", copyShortlist);
 els.clearShortlist.addEventListener("click", clearShortlist);
 els.leads.addEventListener("click", (event) => {
   const index = event.target.dataset.toggle;
